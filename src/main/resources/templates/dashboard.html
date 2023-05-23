@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html lang="en" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title th:text="${title}">title</title>
+
+    <script type="text/javascript" src="https://me.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=ls7cwnc9yJB8LoeryW8mjKTi-BA_rHU1en-Nf1Ze25lBJ_Uy-DdMBMZVFgu-Nvcs0FBEQ_AsDd7HDMkHY-YpcYgO3LAc3LhHZtUesrsFFBo" charset="UTF-8"></script>
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+
+
+
+    <link href="/css/cover.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" type="text/css" rel="stylesheet"/>
+
+</head>
+<body>
+
+<header class="mb-auto">
+    <div><br>
+        <h3 class="float-md-start mb-0">MADigital</h3>
+        <nav class="nav nav-masthead justify-content-center float-md-end">
+            <a class="nav-link" href="#">+7 (910) 785-13-42</a>
+            <a class="nav-link" href="#">Смоленск,  Свердлова 47</a>
+            <a class="nav-link" href="/auth/home">На главную</a>
+            <a class="nav-link" href="javascript: document.logoutForm.submit()">Выход</a><br>
+            <form name="logoutForm" th:action="@{/auth/logout}" method="post" th:hidden="true">
+                <input hidden type="submit" value="Выход"/>
+            </form>
+            <br> </nav>
+    </div>
+</header>
+
+<canvas></canvas>
+
+<style>
+    body {
+        padding-top: 5vh;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Получение контекста для рисования
+    let canvas = window.document.querySelector('canvas');
+    let context = canvas.getContext('2d');
+    // Функции
+    const createLineChart = (xData, yData) => {
+        let data = {
+            labels: xData,
+            datasets: [{
+                label: 'Денежные средства компании',
+                data: yData,
+                pointStyle: false,
+                fill: true,
+                borderWidth: 1
+            }]
+        }
+        let config = {
+            type: 'line',
+            data: data
+        }
+        let chart = new Chart(context, config);
+    }
+    // Получение данных с сервера
+    //axios.get('https://www.alphavantage.co/query?function=ALUMINUM&interval=monthly&apikey=demo')
+    axios.get('/api/dashboard/V1')
+        .then((response)=>{
+            let data = response.data;
+            let xData = [];
+            let yData = [];
+            for(let i = 0; i < data.length; i++){
+                xData.push(data[i].date);
+                yData.push(data[i].value);
+            }
+            createLineChart(xData, yData);
+        });
+// _____________________________________________________________________________________________
+
+</script>
+
+</body>
+</html>
