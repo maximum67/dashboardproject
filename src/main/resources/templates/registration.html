@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <title th:text="${title}">title</title>
+    <title>registration</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/sign-in/">
     <link href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" type="text/css" rel="stylesheet" />
 
@@ -12,7 +12,7 @@
     <!-- Bootstrap core CSS -->
     <link href="https://getbootstrap.com/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-<!--    Favicons-->
+    <!--    Favicons-->
     <link rel="apple-touch-icon" href="https://getbootstrap.com/docs/5.1/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
     <link rel="icon" href="https://getbootstrap.com/docs/5.1/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="https://getbootstrap.com/docs/5.1/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
@@ -24,20 +24,20 @@
 
     <script type="text/javascript" src="https://me.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=YOpYTRUk6jLx_FKfDTa9F2WFS5iMoeVb2ohfCAeR3wolBL-vPnofLRncLV64RU3wqpj8mMpIRr9TBRBvrH69y0fMJFyTXJ-kzPWg-TM11MU" charset="UTF-8"></script>
     <style>
-       .bd-placeholder-img {
-           font-size: 1.125rem;
-           text-anchor: middle;
-           -webkit-user-select: none;
-           -moz-user-select: none;
-           user-select: none;
-       }
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
 
-       @media (min-width: 768px) {
-           .bd-placeholder-img-lg {
-               font-size: 3.5rem;
-           }
-       }
-   </style>
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
 
 
     <!-- Custom styles for this template -->
@@ -53,11 +53,11 @@
             <div class="col"></div>
             <br><br>
             <div class="col-sm-6">
-                <form class="form-signin" th:action="@{/auth/login}" method="post">
-                    <h1 class="h3 mb-3 fw-normal">Пожалуйста, войдите в систему</h1>
+                <form class="form-signin" th:action="@{/auth/registration}" method="post">
+                    <h1 class="h3 mb-3 fw-normal">Пожалуйста, зарегистрируйтесь</h1>
 
                     <div class="form-floating">
-                        <input type="text" class="form-control" name="username" id="floatingInput" autocomplete="new-username" placeholder="Username">
+                        <input type="text" class="form-control" name="name" id="floatingInput" autocomplete="new-username" placeholder="Username">
                         <label for="floatingInput">Username</label>
                     </div>
                     <br>
@@ -66,17 +66,10 @@
                         <label for="floatingPassword">Password</label>
                     </div>
                     <br><br>
-<!--                    <div class="checkbox mb-3">-->
-<!--                        <label>-->
-<!--                            <input type="checkbox" value="remember-me"> Запомнить меня-->
-<!--                        </label>-->
-<!--                    </div>-->
-                    <button class="w-100 btn btn-lg btn-secondary" type="submit">Войти</button> <br><br>
-
-                </form><br>
-                    <a class="lead" th:href="@{/auth/registration}"><h5>Регистрация</h5></a>
+                   <button class="w-100 btn btn-lg btn-secondary" type="submit">Зарегистрироваться</button>
+                </form>
             </div>
-
+<!--            <h2 th:if="$(errorMessage)">Ошибка</h2>-->
             <div class="col"></div>
         </div>
         <br><br><br><br><br><br>

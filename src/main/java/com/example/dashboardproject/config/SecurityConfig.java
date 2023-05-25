@@ -2,6 +2,7 @@ package com.example.dashboardproject.config;
 
 import com.example.dashboardproject.models.Role;
 
+import com.example.dashboardproject.services.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,16 +22,16 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-//       private final CustomUserDetailsService userDetailsService;
+       private final CustomUserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 //.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/*").permitAll()
+                .requestMatchers("/*","/css/*","/auth/registration").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -61,28 +62,28 @@ public class SecurityConfig {
 
     }
 
-    @Bean
+//    @Bean
+//
+//    protected UserDetailsService userDetailsService() {
+//        return  new InMemoryUserDetailsManager(
+//                User.builder()
+//                        .username("admin")
+//                        .password(passwordEncoder().encode("Aspirin15"))
+//                        .authorities(Role.ROLE_ADMIN.getAuthority())
+//                        .build(),
+//                User.builder()
+//                        .username("user")
+//                        .password(passwordEncoder().encode("Aspirin15"))
+//                        .authorities(Role.ROLE_USER.getAuthority())
+//                        .build()
+//        );
+//
+//     }
 
-    protected UserDetailsService userDetailsService() {
-        return  new InMemoryUserDetailsManager(
-                User.builder()
-                        .username("admin")
-                        .password(passwordEncoder().encode("Aspirin15"))
-                        .authorities(Role.ADMIN.getAuthority())
-                        .build(),
-                User.builder()
-                        .username("user")
-                        .password(passwordEncoder().encode("Aspirin15"))
-                        .authorities(Role.USER.getAuthority())
-                        .build()
-        );
 
-     }
-
-
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-//    }
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
 
     @Bean
     protected PasswordEncoder passwordEncoder() {
