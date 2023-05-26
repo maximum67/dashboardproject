@@ -89,6 +89,9 @@
         .bd-mode-toggle {
             z-index: 1500;
         }
+        .mycol {
+            margin: 1% 1%;
+        }
     </style>
 
 
@@ -188,7 +191,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">
+                        <a class="nav-link" href="/auth/userList">
                             <span data-feather="users" class="align-text-bottom"></span>
                             Пользователи
                         </a>
@@ -243,40 +246,97 @@
         </nav>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <h2 th:text="${user.name}">Список пользователей</h2>
-            <div class="table-responsive">
+            <h2 th:text="'Настройки пользователя '+${user.name}">Пользователь</h2>
+
+            <div class="col-md">
+                <form class="form-control-sm" th:action="'/auth/updatePassword/'+${user.id}" method="post">
+                    <div class="mycol">
+                        <label for="password" class="form-label"><b>Пароль</b></label>
+                        <input class="form-control" type="password" id="password" name="password" th:value="${user.password}"/>
+                        <input type="hidden" th:value="${user.id}" name="userId">
+                        <input type="hidden" value="${_csrf.token}" name="_csrf"><br>
+                    </div>
+                    <div class="mycol">
+                        <button class="btn btn-primary d-inline-flex align-items-center" type="submit">Изменить пароль пользователя</button> <br>
+                    </div>
+
+                </form>
+            </div><br>
+
+            <div class="mycol">
+            <th class="table-responsive">
                 <table class="table table-striped table-sm">
                     <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Имя пользователя</th>
-                        <th scope="col">Активность</th>
-                        <th scope="col">Роль</th>
-                        <th scope="col">Редактирование</th>
-                    </tr>
                     </thead>
                     <tbody>
+                    <div class="mycol">
                     <tr>
-                        <th th:text="${user.id}">id</th>
-                        <th th:text="${user.name}">name</th>
-                        <th th:text="${user.active}? 'Активен' :'Не активен'">YES</th>
-                        <th th:text="${user.roles}">role</th>
-                        <!--                        <th>БАН-->
-                        <!--                            <form action="/admin/user/ban/${user.id}" method="post">-->
-                        <!--                                <input type="hidden" name="_csrf" value="${_csrf.token}">-->
-                        <!--                                <input type="submit" value="Бан">-->
-                        <!--                            </form>-->
-                        <!--                        </th>-->
-                        <th><a href="#">Редактирование</a></th>
-
+                        <th>
+                            <form th:action="'/auth/user/ban/'+${user.id}" method="post">
+                                <input type="hidden" name="_csrf" value="${_csrf.token}">
+                                <button class="btn btn-primary d-inline-flex align-items-center" type="submit">БАН</button>
+                            </form>
+                        </th>
+                        <th th:text="${user.active}? 'АКТИВЕН' :'НЕ АКТИВЕН'">Yes</th>
                     </tr>
+
+
+                    <tr>
+                        <th>
+                            <div>
+                                <p>   </p>
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                <p>   </p>
+                            </div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="col"><h4>Роли пользователя</h4></th>
+                        <th>
+                            <form th:action="'/auth/user/changRoles/'+${user.id}" method="post">
+                                <div th:each="r : ${roles}">
+                                    <input type="checkbox" th:name="${r}" th:checked="${#lists.contains(user.roles, r)}" th:utext="${r}">
+                                </div>
+                                <input type="hidden" th:value="${user.id}" name="userId">
+                                <input type="hidden" value="${_csrf.token}" name="_csrf"><br>
+                                <button class="btn btn-primary d-inline-flex align-items-center" type="submit">Сохранить</button>
+                            </form>
+                        </th>
+                    </tr>
+                        <tr>
+                            <th>
+                                <div>
+                                    <p>   </p>
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <p>   </p>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <form th:action="'/auth/user/deleteUser/'+${user.id}" method="post">
+                                    <input type="hidden" name="_csrf" value="${_csrf.token}">
+                                    <button class="btn btn-primary d-inline-flex align-items-center" type="submit">УДАЛИТЬ ПОЛЬЗОВАТЕЛЯ</button>
+                                </form>
+                            </th>
+                            <th>
+                                <p>  </p>
+                            </th>
+                        </tr>
+                    </div>
                     </tbody>
                 </table>
+            </th>
             </div>
         </main>
     </div>
 </div>
-
 
 <script src="/dist/js/bootstrap.bundle.min.js"></script>
 

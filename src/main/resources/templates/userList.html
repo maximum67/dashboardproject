@@ -248,11 +248,11 @@
                 <table class="table table-striped table-sm">
                     <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Имя пользователя</th>
-                        <th scope="col">Активность</th>
-                        <th scope="col">Роль</th>
-                        <th scope="col">Редактирование</th>
+                        <th scope="col"><b>#</b></th>
+                        <th scope="col"><b>Имя пользователя</b></th>
+                        <th scope="col"><b>Активность</b></th>
+                        <th scope="col"><b>Роль</b></th>
+                        <th scope="col"><b>Редактирование</b></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -261,13 +261,7 @@
                         <th th:text="${user.name}">name</th>
                         <th th:text="${user.active}? 'Активен' :'Не активен'">YES</th>
                         <th th:text="${user.roles}">role</th>
-<!--                        <th>БАН-->
-<!--                            <form action="/admin/user/ban/${user.id}" method="post">-->
-<!--                                <input type="hidden" name="_csrf" value="${_csrf.token}">-->
-<!--                                <input type="submit" value="Бан">-->
-<!--                            </form>-->
-<!--                        </th>-->
-                        <th><a th:href="'/dash/userEdit/'+${user.id}">Редактирование</a></th>
+                        <th><a th:href="'/auth/userEdit/'+${user.id}">Редактирование</a></th>
 
                      </tr>
                     </tbody>
