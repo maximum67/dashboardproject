@@ -188,21 +188,21 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/auth/userList">
-              <span data-feather="users" class="align-text-bottom"></span>
-              Пользователи
-            </a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" href="#">
               <span data-feather="bar-chart-2" class="align-text-bottom"></span>
               Reports
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/auth/userList">
+              <span data-feather="users" class="align-text-bottom"></span>
+              Пользователи
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/dash/ftpsettingList">
               <span data-feather="layers" class="align-text-bottom"></span>
-              Integrations
+              Настройки
             </a>
           </li>
         </ul>
@@ -257,9 +257,12 @@
         </div>
       </div>
 
+      <div>
       <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-
-<!--      <canvas></canvas>-->
+      </div>
+<!--      <div>-->
+<!--      <canvas class="my-4 w-100" id="myChart" width="900" height="380></canvas>-->
+<!--      </div>-->
       <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
       <script>

@@ -1,0 +1,5 @@
+host:37.44.45.165
+port:21
+login:aanki99
+password:Aspirin15
+pathname:reportBank (XLS).xls
