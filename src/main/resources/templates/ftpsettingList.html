@@ -188,9 +188,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/dash/dashboardparamList">
                             <span data-feather="bar-chart-2" class="align-text-bottom"></span>
-                            Reports
+                            Список показателей
                         </a>
                     </li>
                     <li class="nav-item">
@@ -202,7 +202,7 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">
                             <span data-feather="home" class="align-text-bottom"></span>
-                            Настройки
+                            Настройки FTP
                         </a>
                     </li>
                 </ul>
@@ -251,6 +251,7 @@
                         <thead>
                         <tr>
                             <th scope="col">#</th>
+                            <th scope="col">Параметр</th>
                             <th scope="col">Host</th>
                             <th scope="col">Port</th>
                             <th scope="col">Filename</th>
@@ -262,6 +263,7 @@
                         <div class="mycol">
                             <tr th:each="setting : ${settings}">
                                 <th th:text="${setting.id}">id</th>
+                                <th th:text="${setting.dashboardParam.name}">name</th>
                                 <th th:text="${setting.host}">host</th>
                                 <th th:text="${setting.port}">port</th>
                                 <th th:text="${setting.filename}">filename</th>

@@ -1,11 +1,12 @@
 package com.example.dashboardproject.services;
 
+import com.example.dashboardproject.models.DashboardParam;
 import com.example.dashboardproject.models.DashboardV1;
 import com.example.dashboardproject.repositories.DashboardV1repository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -29,5 +30,14 @@ public class V1service {
     public DashboardV1 getDashboardV1ById(Long id){
         return dashboardV1repository.getById(id);
     }
+
+    public List<DashboardV1> listDashboardV1ByDashboardParam(DashboardParam dashboardParam){
+        return dashboardV1repository.findAllByDashboardParam(dashboardParam);
+    }
+
+    public void updateDashboardV1(DashboardV1 dashboardV1){
+        dashboardV1repository.save(dashboardV1);
+    }
+
 }
 

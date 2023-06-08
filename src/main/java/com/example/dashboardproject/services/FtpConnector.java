@@ -13,10 +13,9 @@ import java.util.HashMap;
 
 public class FtpConnector {
 
-    Logger logger
-            = LoggerFactory.getLogger(FtpConnector.class);
+    Logger logger = LoggerFactory.getLogger(FtpConnector.class);
 
-    public FTPClient connect(HashMap<String,String> map) throws IOException {
+    public FTPClient connect(HashMap<String,String> map){
 
         // создаем экземпляр FTPClient
         FTPClient ftpClient = new FTPClient();
@@ -26,17 +25,10 @@ public class FtpConnector {
             ftpClient.connect(map.get("host"), Integer.parseInt(map.get("port")));
 
             int replyCode = ftpClient.getReplyCode();
-
             if (!FTPReply.isPositiveCompletion(replyCode)) {
-                 logger.info (
-
-                        "Operation failed. Server reply code: "+
-                                replyCode
-
-                );
+                 logger.info ("Operation failed. Server reply code: "+ replyCode);
                 ftpClient.disconnect();
             }
-
             // входим на ftp server под именем и паролем
             boolean success
                     = ftpClient.login(map.get("login"), map.get("password"));
@@ -81,6 +73,10 @@ public class FtpConnector {
                     = ftpClient.login(map.get("login"), map.get("password"));
             if (!success) {
                 ftpClient.disconnect();
+                return "Не верный логин или пароль";
+            }else{
+                ftpClient.disconnect();
+                return "Успешное подключение к серверу";
             }
         }
         catch (UnknownHostException E) {
@@ -89,7 +85,7 @@ public class FtpConnector {
         catch (IOException e) {
            return e.getMessage();
         }
-        ftpClient.disconnect();
-        return "Соединение с сервером установлено";
+  //      ftpClient.disconnect();
+  //      return "Соединение с сервером установлено";
     }
 }

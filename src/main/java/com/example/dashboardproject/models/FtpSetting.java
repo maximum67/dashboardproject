@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Entity
 @Table(name="ftpstting")
@@ -12,7 +15,7 @@ import java.time.LocalTime;
 public class FtpSetting {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -36,5 +39,24 @@ public class FtpSetting {
 
     @Column(name ="active")
     private boolean active;
+
+    @Column(name="trDate")
+    private int thDate;
+
+    @Column(name="thDate")
+    private int trDate;
+
+    @Column(name = "trValue")
+    private int trValue;
+
+    @Column(name="thValue")
+    private int thValue;
+
+    @OneToOne(cascade = CascadeType.REFRESH,
+            fetch = FetchType.LAZY)
+    @JoinColumn
+    private DashboardParam dashboardParam;
+
+
 }
 

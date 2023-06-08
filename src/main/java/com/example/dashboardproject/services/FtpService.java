@@ -1,5 +1,7 @@
 package com.example.dashboardproject.services;
 
+import com.example.dashboardproject.fileParsing.ThreadTaskFileParsing;
+import com.example.dashboardproject.models.DashboardV1;
 import com.example.dashboardproject.models.FtpSetting;
 import com.example.dashboardproject.repositories.FtpSettingRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,14 +17,28 @@ import java.util.*;
 public class FtpService {
 
     private final FtpSettingRepository ftpSettingRepository;
+    private ThreadTaskFileParsing threadTaskFileParsing;
+    private HashMap<Long, ThreadTaskFileParsing> map = new HashMap<>();
 
     public void deleteFtpSetting(Long id){ ftpSettingRepository.deleteById(id); }
 
-    public void activateFtpSetting(Long id, boolean active) {
+    public void activateFtpSetting(Long id, boolean active, V1service v1service) {
         FtpSetting ftpSetting = ftpSettingRepository.findById(id).orElse(null);
         if (active) {
             ftpSetting.setActive(true);
-        }else{ ftpSetting.setActive(false); }
+            if (!map.containsKey(ftpSetting.getId())){
+            threadTaskFileParsing = new ThreadTaskFileParsing(ftpSetting, v1service);
+            threadTaskFileParsing.start();
+            map.put(ftpSetting.getId(), threadTaskFileParsing);
+            }
+        }else{
+            ftpSetting.setActive(false);
+            if (map.containsKey(ftpSetting.getId())) {
+                threadTaskFileParsing = map.get(ftpSetting.getId());
+                threadTaskFileParsing.interrupt();
+                map.remove(ftpSetting.getId());
+            }
+       }
         ftpSettingRepository.save(ftpSetting);
     }
 
@@ -34,25 +50,22 @@ public class FtpService {
 
     public FtpSetting getFtpSettingById(Long id){ return ftpSettingRepository.findById(id).orElse(null); }
 
-    public void ftpDownlodFiles(Long id) throws IOException {
+    public void ftpDownloadFiles(FtpSetting ftpSetting) throws IOException {
 
-        HashMap<String,String> map = new HashMap<>();
+        HashMap<String,String> hashMap = new HashMap<>();
 
-        FtpSetting ftpSetting = ftpSettingRepository.findById(id).orElse(null);
-        map.put("host", ftpSetting.getHost());
-        map.put("port", ftpSetting.getPort());
-        map.put("login", ftpSetting.getLogin());
+//        FtpSetting ftpSetting = ftpSettingRepository.findById(id).orElse(null);
+        hashMap.put("host", ftpSetting.getHost());
+        hashMap.put("port", ftpSetting.getPort());
+        hashMap.put("login", ftpSetting.getLogin());
         Base64.Decoder decoder = Base64.getDecoder();
-        map.put("password", new String(decoder.decode(ftpSetting.getPassword())));
-
-
-
+        hashMap.put("password", new String(decoder.decode(ftpSetting.getPassword())));
 
         // создание экземпляра FtpConnector
         FtpConnector ftpConnector = new FtpConnector();
 
         // получаем объект ftp-клиента
-        FTPClient ftpClient = ftpConnector.connect(map);
+        FTPClient ftpClient = ftpConnector.connect(hashMap);
 
         // перечислим все файлы, которые будут загружены
       //  FTPFile[] ftpFiles = ftpClient.listFiles("/123/reportBank (XLS).xls");
@@ -86,8 +99,6 @@ public class FtpService {
 //                        file.getName(), isFileRetrieve);
 
             }
-
         }
     }
-
 }

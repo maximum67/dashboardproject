@@ -11,10 +11,6 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/dashboard/">
 
-    
-
-    
-
 <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
@@ -94,6 +90,7 @@
     
     <!-- Custom styles for this template -->
     <link href="/dashboard.css" rel="stylesheet">
+
   </head>
   <body>
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -188,9 +185,9 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/dash/dashboardparamList">
               <span data-feather="bar-chart-2" class="align-text-bottom"></span>
-              Reports
+              Список показателей
             </a>
           </li>
           <li class="nav-item">
@@ -202,7 +199,7 @@
           <li class="nav-item">
             <a class="nav-link" href="/dash/ftpsettingList">
               <span data-feather="layers" class="align-text-bottom"></span>
-              Настройки
+              Настройки FTP
             </a>
           </li>
         </ul>
@@ -257,12 +254,54 @@
         </div>
       </div>
 
+<!--   __________________________________________________________________________________________________-->
+      <div id="chartContainer" style="height: 300px; width: 100%;">
+      </div>
+      <script type="text/javascript">
+        window.onload = function () {
+          var chart = new CanvasJS.Chart("chartContainer",
+                  {
+                    title:{
+                      text: "Название диаграммы"  //**Change the title here
+                    },
+                    data: [
+                      {
+                        type: "column",
+                        dataPoints: [
+                          // { x: 10, y: 71 },
+                          // { x: 20, y: 55},
+                          // { x: 30, y: 50 },
+                          // { x: 40, y: 65 },
+                          // { x: 50, y: 95 },
+                          // { x: 60, y: 68 },
+                          // { x: 70, y: 28 },
+                          // { x: 80, y: 34 },
+                          // { x: 90, y: 14}
+                          { label: "apple",  y: 10  },
+                          { label: "orange", y: 15  },
+                          { label: "banana", y: 25  },
+                          { label: "mango",  y: 30  },
+                          { label: "grape",  y: 28  },
+                          { label: "apple",  y: 10  },
+                          { label: "orange", y: 15  },
+                          { label: "banana", y: 25  },
+                          { label: "mango",  y: 30  },
+                          { label: "grape",  y: 28  }
+                        ]
+                      }
+                    ]
+                  });
+
+          chart.render();
+        }
+      </script>
+      <script type="text/javascript" src="/canvasjs.min.js"></script>
+<!--      _______________________________________________________________________________________________________-->
+
       <div>
       <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
       </div>
-<!--      <div>-->
-<!--      <canvas class="my-4 w-100" id="myChart" width="900" height="380></canvas>-->
-<!--      </div>-->
+
       <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
       <script>
@@ -303,6 +342,7 @@
         // _____________________________________________________________________________________________
 
       </script>
+
 
       <h2>Section title</h2>
       <div class="table-responsive">

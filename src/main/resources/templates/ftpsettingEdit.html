@@ -188,9 +188,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="/dash/dashboardparamList">
                             <span data-feather="bar-chart-2" class="align-text-bottom"></span>
-                            Reports
+                            Список показателей
                         </a>
                     </li>
                     <li class="nav-item">
@@ -202,7 +202,7 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/dash/ftpsettingList">
                             <span data-feather="home" class="align-text-bottom"></span>
-                            Настройки
+                            Настройки FTP
                         </a>
                     </li>
                 </ul>
@@ -247,42 +247,154 @@
 
             <div class="col-md">
                 <form class="form-control-sm" th:action="'/dash/updateFtpsetting/'+${ftpsetting.id}" method="post">
-                    <div class="mycol">
-                        <label for="host" class="form-label"><b>Host</b></label>
-                        <input class="form-control" type="text" id="host" name="host" th:value="${ftpsetting.host}"/>
-                    </div><br>
-                    <div class="mycol">
-                        <label for="port" class="form-label"><b>Порт</b></label>
-                        <input class="form-control" type="text" id="port" name="port" th:value="${ftpsetting.port}"/>
-                    </div><br>
-                    <div class="mycol">
-                        <label for="login" class="form-label"><b>Login</b></label>
-                        <input class="form-control" type="text" id="login" name="login" th:value="${ftpsetting.login}"/>
-                        <input type="hidden" value="${_csrf.token}" name="_csrf">
-                    </div><br>
-                    <div class="mycol">
-                        <label for="password" class="form-label"><b>Пароль</b></label>
-                        <input class="form-control" type="password" id="password" name="password" th:value="${password}"/>
-                    </div><br>
-                    <div class="mycol">
-                        <label for="filename" class="form-label"><b>Имя файла</b></label>
-                        <input class="form-control" type="filename" id="filename" name="filename" th:value="${ftpsetting.filename}"/>
-                    </div><br>
-                    <div class="mycol">
-                        <label for="timetask" class="form-label"><b>Время загрузки</b></label>
-                        <input class="form-control" type="time" id="timetask" name="timetask" th:value="${ftpsetting.timeTask}"/>
-                    </div><br>
+                    <table>
+                        <thead>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th>
+                                <div>
+                                    <p>
+                                    <div class="mycol">
+                                        <label for="host" class="form-label"><b>Host</b></label>
+                                        <input class="form-control" type="text" id="host" name="host"
+                                               th:value="${ftpsetting.host}"/>
+                                    </div>
+                                    </p>
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <p>
+                                    <div class="mycol">
+                                        <label for="port" class="form-label"><b>Порт</b></label>
+                                        <input class="form-control" type="text" id="port" name="port"
+                                               th:value="${ftpsetting.port}"/>
+                                    </div>
+                                    </p>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <div>
+                                    <p>
+                                    <div class="mycol">
+                                        <label for="login" class="form-label"><b>Login</b></label>
+                                        <input class="form-control" type="text" id="login" name="login"
+                                               th:value="${ftpsetting.login}"/>
+                                        <input type="hidden" value="${_csrf.token}" name="_csrf">
+                                    </div>
+                                    </p>
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <p>
+                                    <div class="mycol">
+                                        <label for="password" class="form-label"><b>Пароль</b></label>
+                                        <input class="form-control" type="password" id="password" name="password"
+                                               th:value="${password}"/>
+                                    </div>
+                                    </p>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <div>
+                                    <p>
+                                    <div class="mycol">
+                                        <label for="filename" class="form-label"><b>Имя файла</b></label>
+                                        <input class="form-control" type="filename" id="filename" name="filename"
+                                               th:value="${ftpsetting.filename}"/>
+                                    </div>
+                                    </p>
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <p>
+                                    <div class="mycol">
+                                        <label for="timetask" class="form-label"><b>Время загрузки</b></label>
+                                        <input class="form-control" type="time" id="timetask" name="timetask"
+                                               th:value="${ftpsetting.timeTask}"/>
+                                    </div>
+                                    </p>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <div>
+                                    <p><label for="trDate" class="form-label"><b>Строка дата</b></label>
+                                        <input class="form-control" type="text" id="trDate" name="trDate" th:value="${ftpsetting.trDate}"/>
+                                    </p>
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <p><label for="thDate" class="form-label"><b>Столбец дата</b></label>
+                                        <input class="form-control" type="text" id="thDate" name="thDate" th:value="${ftpsetting.thDate}"/>
+                                    </p>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <div>
+                                    <p><label for="trValue" class="form-label"><b>Строка значение</b></label>
+                                        <input class="form-control" type="text" id="trValue" name="trValue" th:value="${ftpsetting.trValue}"/>
+                                    </p>
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <p><label for="thValue" class="form-label"><b>Столбец значение</b></label>
+                                        <input class="form-control" type="text" id="thValue" name="thValue" th:value="${ftpsetting.thValue}"/>
+                                    </p>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <div>
+                                    <p>
+                                    <div>
+                                        <label for="dashboardparam"><b>Показатель для Dashboard</b></label>
+                                        <select class="form-select" name="dashboardparam" id="dashboardparam">
+                                            <option th:text="${dashparam.name}" th:value="${dashparam.id}">--Выбрать доступный параметр--</option>
+                                            <p th:each="dashboardparam : ${dashboardparams}">
+                                                <option th:text="${dashboardparam.name}"
+                                                        th:value="${dashboardparam.id}">Параметр</option>
+                                            </p>
+                                        </select>
+                                    </div>
+                                    <br> </p>
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <p></p>
+                                </div>
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
                     <div class="mycol">
                         <input type="checkbox" name="active" id="active" th:checked="${ftpsetting.active}"/>
                         <label for="active" class="form-label"><b>Активность</b></label>
                         <input type="hidden" name="active" id="active" value="false"/>
-                    </div><br>
+                    </div>
+                    <br>
                     <div class="mycol">
-                        <button class="btn btn-primary d-inline-flex align-items-center" type="submit">Сохранить настройки</button> <br>
+                        <button class="btn btn-primary d-inline-flex align-items-center" type="submit">Сохранить
+                            настройки
+                        </button>
+                        <br>
                     </div>
                 </form>
             </div><br><br>
-
 
             <div class="mycol">
                 <th class="table-responsive">
@@ -305,7 +417,7 @@
                                     <div>
                                         <form class="form-control-sm" th:action="'/dash/deleteFtpsetting/'+${ftpsetting.id}" method="post">
                                             <div class="mycol">
-                                                <button class="btn btn-primary d-inline-flex align-items-center" type="submit">Удалить подлючение</button>
+                                                <button class="btn btn-primary d-inline-flex align-items-center" type="submit">Удалить настройки</button>
                                             </div>
                                         </form>
                                     </div>
