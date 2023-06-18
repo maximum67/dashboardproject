@@ -21,11 +21,15 @@ public class DashboardParam {
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, mappedBy = "dashboardParam")
+            fetch = FetchType.EAGER, mappedBy = "dashboardParam")
     private List<DashboardV1> dashboardV1 = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, mappedBy = "dashboardParam")
+            fetch = FetchType.EAGER, mappedBy = "dashboardParam")
     private FtpSetting ftpSetting;
+
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER, mappedBy = "dashboardParam")
+    private List<PeriodSetting> periodSettings = new ArrayList<>();
 
 }

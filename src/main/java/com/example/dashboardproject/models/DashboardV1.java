@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
+
 @Entity
 @Table(name = "dashV1")
 @Data
@@ -17,7 +20,7 @@ public class DashboardV1 {
     private Long id;
 
     @Column(name = "date")
-    private String date;
+    private LocalDate date;
 
     @Column(name = "value")
     private String value;

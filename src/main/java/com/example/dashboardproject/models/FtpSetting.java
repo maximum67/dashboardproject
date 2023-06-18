@@ -5,9 +5,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 @Entity
 @Table(name="ftpstting")

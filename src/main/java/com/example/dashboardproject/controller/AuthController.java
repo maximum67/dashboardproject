@@ -3,6 +3,7 @@ package com.example.dashboardproject.controller;
 
 import com.example.dashboardproject.models.Role;
 import com.example.dashboardproject.models.User;
+import com.example.dashboardproject.services.DashboardParamService;
 import com.example.dashboardproject.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class AuthController {
     private final UserService userService;
-
+    private final DashboardParamService dashboardParamService;
 
     @GetMapping("/login")
     public String getLoginPage(Model model) {
@@ -51,12 +52,14 @@ public class AuthController {
     public String getUserList(Model model){
         model.addAttribute("title","Пользователи");
         model.addAttribute("users", userService.list());
+        model.addAttribute("params",dashboardParamService.list());
         return "userList";
     }
     @GetMapping("/userEdit/{user}")
     public  String userEdit(@PathVariable("user") User user, Model model) {
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
+        model.addAttribute("params",dashboardParamService.list());
         return "userEdit";
     }
     @PostMapping("/user/ban/{id}")

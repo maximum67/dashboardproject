@@ -27,6 +27,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, mappedBy = "user")
+    private List<PeriodSetting> periodSettings = new ArrayList<>();
+
     //Security
 
     public boolean isAdmin(){

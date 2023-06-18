@@ -176,10 +176,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <span data-feather="file" class="align-text-bottom"></span>
-                            Orders
-                        </a>
+                        <div th:each="par : ${params}">
+                            <a class="nav-link" th:href="'/dash/dashboard/'+${par.id}" th:text="${par.name}">
+                                <span data-feather="file" class="align-text-bottom"></span>
+                                Параметры
+                            </a>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">

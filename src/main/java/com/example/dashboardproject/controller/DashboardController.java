@@ -2,10 +2,7 @@ package com.example.dashboardproject.controller;
 
 
 
-import com.example.dashboardproject.models.DashboardParam;
-import com.example.dashboardproject.models.FtpSetting;
-import com.example.dashboardproject.models.Role;
-import com.example.dashboardproject.models.User;
+import com.example.dashboardproject.models.*;
 import com.example.dashboardproject.repositories.DashboardParamRepository;
 import com.example.dashboardproject.repositories.FtpSettingRepository;
 import com.example.dashboardproject.services.*;
@@ -32,18 +29,60 @@ public class DashboardController {
     private final FtpService ftpService;
     private final V1service v1service;
     private final DashboardParamService dashboardParamService;
+    private final DashboardPeriodService dashboardPeriodService;
     Base64.Decoder decoder = Base64.getDecoder();
     Base64.Encoder encoder = Base64.getEncoder();
 
     @GetMapping("/dashboardV1")
     public String getDashboard(Model model) {
-         model.addAttribute("title","Dashboard");
-         return "dashboardV1";
-     }
+        model.addAttribute("title", "Dashboard");
+        model.addAttribute("params",dashboardParamService.list());
+//        model.addAttribute("dashboardParamIds",dashboardParamService.getDashboardParamIds());
+//        model.addAttribute("dashboardParam", dashboardParamService.getById(1L).getName());
+//        model.addAttribute("dashboardParamId", dashboardParamService.getById(1L).getId());
+//        model.addAttribute("period_select", dashboardPeriodService.getPeriodByUser());
+        return "dashboardV1";
+    }
+    @GetMapping("/dashboard")
+        public String getDashboardTest(Model model) {
+        model.addAttribute("title","Dashboard");
+        model.addAttribute("params",dashboardParamService.list());
+//        model.addAttribute("dashboardParam", dashboardParamService.getById(1L).getName());
+//        model.addAttribute("dashboardParamId", dashboardParamService.getById(1L).getId());
+        model.addAttribute("period_select", dashboardPeriodService.getPeriodByUser());
+            return "dashboard";
+   }
+    @GetMapping("/dashboard/{dashboardParam}")
+    public String getDashboardV(@PathVariable("dashboardParam") DashboardParam dashboardParam,Model model) {
+        model.addAttribute("title", "Dashboard");
+        model.addAttribute("params", dashboardParamService.list());
+        model.addAttribute("dashboardParam", dashboardParam.getName());
+        model.addAttribute("dashboardParamId",dashboardParam.getId());
+        String str = "";
+        Long periodValue = 7L;
+        switch (dashboardPeriodService.getPeriodByUserAndParam(dashboardParam).getDashboardPeriod()) {
+            case PERIOD_MONTH : str = "Период месяц";
+            periodValue=30L;
+            break;
+            case PERIOD_YEAR : str = "Период год";
+                periodValue=365L;
+            break;
+            case PERIOD_QUARTER : str = "Период квартал";
+                periodValue=90L;
+            break;
+            default : str = "Период неделя";
+        };
+        model.addAttribute("period_select", str);
+        model.addAttribute("periodValue", periodValue);
+        return "dashboard";
+    }
+    //_________________________________________________________________________________________________________
+
     @GetMapping("/ftpsettingList")
     public String getFtpSettingList(Model model) {
         model.addAttribute("title","ftpsettingList");
         model.addAttribute("settings",ftpService.list());
+        model.addAttribute("params",dashboardParamService.list());
         return "ftpsettingList";
     }
     @GetMapping("/ftpsettingEdit/{ftpsetting}")
@@ -53,6 +92,7 @@ public class DashboardController {
         model.addAttribute("password", new String(decoder.decode(ftpSetting.getPassword())));
         model.addAttribute("dashboardparams", dashboardParamService.list());
         model.addAttribute("dashparam", ftpSetting.getDashboardParam());
+        model.addAttribute("params",dashboardParamService.list());
         return "ftpsettingEdit";
     }
     @PostMapping("/updateFtpsetting/{ftpsetting}")
@@ -91,6 +131,7 @@ public class DashboardController {
         model.addAttribute("password", new String(decoder.decode(ftpSetting.getPassword())));
         model.addAttribute("dashboardparams", dashboardParamService.list());
         model.addAttribute("dashparam", ftpSetting.getDashboardParam());
+        model.addAttribute("params",dashboardParamService.list());
         return "ftpsettingEdit";
     }
     @GetMapping("/ftpsettingNew")
@@ -122,7 +163,7 @@ public class DashboardController {
         ftpSetting.setThValue(thValue);
         ftpService.updateFtpSetting(ftpSetting);
         return "redirect:/dash/ftpsettingEdit/" + ftpSetting.getId();
-   }
+    }
 
     @PostMapping("/deleteFtpsetting/{ftpsetting}")
     public String deleteSetting(@PathVariable ("ftpsetting") FtpSetting ftpSetting){
@@ -134,12 +175,14 @@ public class DashboardController {
     public String getDashboardParamList(Model model) {
         model.addAttribute("title", "dashboardparamlist");
         model.addAttribute("dashboardParams", dashboardParamService.list());
+        model.addAttribute("params",dashboardParamService.list());
         return "dashboardparamList";
     }
     @GetMapping("/dashboardparamEdit/{dashboardparam}")
         public String getDashboardparamEdit(@PathVariable ("dashboardparam") DashboardParam dashboardParam, Model model){
         model.addAttribute("title", "dashbordparam");
         model.addAttribute("dashboardparam", dashboardParam);
+        model.addAttribute("params",dashboardParamService.list());
         return "dashboardparamEdit";
     }
     @PostMapping("/updateDashboardparam/{dashboardparam}")
@@ -158,12 +201,57 @@ public class DashboardController {
     @GetMapping("/dashboardparamNew")
     public String dashboardparamNew(Model model){
         model.addAttribute("title", "new dashboardparam");
+        model.addAttribute("params",dashboardParamService.list());
         return "dashboardparamNew";
     }
     @PostMapping("/deleteDashboardparam/{dashboardparam}")
     public String deleteDashboardparam(@PathVariable ("dashboardparam") DashboardParam dashboardParam) {
-        dashboardParamService.deleteDashboardparam(dashboardParam.getId());
+        dashboardParamService.deleteDashboardParam(dashboardParam.getId());
         return "redirect:/dash/dashboardparamList";
     }
+    //________________________________________________________________________________
+
+    @GetMapping("/dashboardV1/{p}/{dashboardParamId}")
+    public String getPeriodSettingV1(@PathVariable ("p") Long p, @PathVariable ("dashboardParamId") Long id){
+        DashboardParam dashboardParam = dashboardParamService.getById(id);
+        if(dashboardParam.getId()==1000000000L) return "redirect:/dash/dashboardV1";
+        PeriodSetting periodSetting1 = dashboardPeriodService.getPeriodByUserAndParam(dashboardParam);
+        if (p == 1L) {
+            periodSetting1.setDashboardPeriod(DashboardPeriod.PERIOD_WEEK);
+        } else if (p == 2L) {
+            periodSetting1.setDashboardPeriod(DashboardPeriod.PERIOD_MONTH);
+        } else if (p == 3L) {
+            periodSetting1.setDashboardPeriod(DashboardPeriod.PERIOD_QUARTER);
+        } else if (p == 4L) {
+            periodSetting1.setDashboardPeriod(DashboardPeriod.PERIOD_YEAR);
+        } else {
+            periodSetting1.setDashboardPeriod(DashboardPeriod.PERIOD_WEEK);
+        }
+        dashboardPeriodService.updateDashboardPeriod(periodSetting1);
+        return "redirect:/dash/dashboardV1";
+    }
+
+
+    @GetMapping("/dashboard/{p}/{dashboardParamId}")
+    public String getPeriodSetting(@PathVariable ("p") Long p, @PathVariable ("dashboardParamId") Long id){
+        DashboardParam dashboardParam = dashboardParamService.getById(id);
+        if(dashboardParam.getId()==1000000000L) return "redirect:/dash/dashboard";
+        PeriodSetting periodSetting = dashboardPeriodService.getPeriodByUserAndParam(dashboardParam);
+        if (p == 1L) {
+            periodSetting.setDashboardPeriod(DashboardPeriod.PERIOD_WEEK);
+        } else if (p == 2L) {
+            periodSetting.setDashboardPeriod(DashboardPeriod.PERIOD_MONTH);
+        } else if (p == 3L) {
+            periodSetting.setDashboardPeriod(DashboardPeriod.PERIOD_QUARTER);
+        } else if (p == 4L) {
+            periodSetting.setDashboardPeriod(DashboardPeriod.PERIOD_YEAR);
+        } else {
+            periodSetting.setDashboardPeriod(DashboardPeriod.PERIOD_WEEK);
+        }
+        dashboardPeriodService.updateDashboardPeriod(periodSetting);
+        return "redirect:/dash/dashboard/"+dashboardParam.getId();
+
+    }
+
 }
 
