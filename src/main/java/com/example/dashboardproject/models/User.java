@@ -37,6 +37,10 @@ public class User implements UserDetails {
         return roles.contains(Role.ROLE_ADMIN);
     }
 
+    public boolean isVisitor() {return roles.contains(Role.ROLE_VISITOR);}
+
+    public boolean isUser() {return roles.contains(Role.ROLE_USER);}
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;

@@ -69,10 +69,11 @@
                    <button class="w-100 btn btn-lg btn-secondary" type="submit">Зарегистрироваться</button>
                 </form>
             </div>
-<!--            <h2 th:if="$(errorMessage)">Ошибка</h2>-->
             <div class="col"></div>
         </div>
-        <br><br><br><br><br><br>
+        <br><br>
+        <h4 th:text="${errorMessage}? '':'Пользователь с таким именем существует'">Ошибка</h4>
+        <br><br><br><br>
         <h1 class="h3 mb-3 flex-wrap ">MADigital</h1>
         <br><br><br>
     </div>

@@ -1,5 +1,6 @@
 package com.example.dashboardproject.fileParsing;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.NumberToTextConverter;
@@ -13,8 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class ExcelReader {
 
+    private static final Logger logger = Logger.getLogger(ExcelReader.class);
     private Object Integer;
 
     public Map<Integer, List<Object>> read(String filename) throws IOException {
@@ -40,20 +43,18 @@ public class ExcelReader {
                 // new format
                 return new XSSFWorkbook(file);
             default:
+                logger.info("Формат файла не является xls или xlsx");
                 throw new RuntimeException("Unknown Excel file extension: " + extension);
         }
     }
 
     private Map<Integer, List<Object>> processSheet(Sheet sheet) {
-        //    System.out.println("Sheet: " + sheet.getSheetName());
         var data = new HashMap<Integer, List<Object>>();
         var iterator = sheet.rowIterator();
         for (var rowIndex = 0; iterator.hasNext(); rowIndex++) {
             var row = iterator.next();
             processRow(data, rowIndex, row);
         }
-        //  System.out.println("Sheet data:");
-        //  System.out.println(data);
         return data;
     }
     private void processRow(HashMap<Integer, List<Object>> data, int rowIndex, Row row) {

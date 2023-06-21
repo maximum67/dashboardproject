@@ -4,6 +4,7 @@ import com.example.dashboardproject.models.FtpSetting;
 import com.example.dashboardproject.services.FtpConnector;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -11,6 +12,9 @@ import java.util.Base64;
 import java.util.HashMap;
 
 public class FtpDownloadFiles {
+
+    private static final Logger logger = Logger.getLogger(FtpDownloadFiles.class);
+
     public void ftpDownloadFiles(FtpSetting ftpSetting) throws IOException {
 
         HashMap<String, String> hashMap = new HashMap<>();
@@ -29,21 +33,16 @@ public class FtpDownloadFiles {
         FTPClient ftpClient = ftpConnector.connect(hashMap);
 
         // перечислим все файлы, которые будут загружены
-   //       FTPFile[] ftpFiles = ftpClient.listFiles("/123/reportBank (XLS).xls");
-       FTPFile[] ftpFiles = ftpClient.listFiles(ftpSetting.getFilename());
+
+        FTPFile[] ftpFiles = ftpClient.listFiles(ftpSetting.getFilename());
 
         // установим каталог загрузки, в котором будут находиться все файлы
         // будут храниться в локальном каталоге
-        String downloading_dir
-                = "";
+        String downloading_dir = "";
 
         for (FTPFile file : ftpFiles) {
+            File fileObj = new File(downloading_dir + file.getName());
 
-            File fileObj = new File(downloading_dir
-
-                    + file.getName());
-            //   Files.createFile(fileObj.toPath());
-//
             try (OutputStream outputStream
                          = new BufferedOutputStream(
                     new FileOutputStream(fileObj))) {
@@ -53,12 +52,9 @@ public class FtpDownloadFiles {
                 boolean isFileRetrieve
                         = ftpClient.retrieveFile(ftpSetting.getFilename(),
                         outputStream);
-               // System.out.println(isFileRetrieve);
+
                 outputStream.close();
-
-//                logger.info("{} file is downloaded : {}",
-//                        file.getName(), isFileRetrieve);
-
+                logger.info(file.getName()+" файл получен с FTP сервера: "+isFileRetrieve);
             }
         }
     }

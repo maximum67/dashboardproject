@@ -7,6 +7,7 @@ import com.example.dashboardproject.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -71,5 +72,7 @@ public class UserService {
 
     public void deleteUser(Long id) {userRepository.deleteById(id);}
 
-    public User getUserByPrincipal(){return null;}
+    public User getUserByPrincipal(){
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
 }

@@ -28,6 +28,7 @@ public class DashboardController {
 
     private final FtpService ftpService;
     private final V1service v1service;
+    private final UserService userService;
     private final DashboardParamService dashboardParamService;
     private final DashboardPeriodService dashboardPeriodService;
     Base64.Decoder decoder = Base64.getDecoder();
@@ -37,16 +38,23 @@ public class DashboardController {
     public String getDashboard(Model model) {
         model.addAttribute("title", "Dashboard");
         model.addAttribute("params",dashboardParamService.list());
+        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
 //        model.addAttribute("dashboardParamIds",dashboardParamService.getDashboardParamIds());
 //        model.addAttribute("dashboardParam", dashboardParamService.getById(1L).getName());
 //        model.addAttribute("dashboardParamId", dashboardParamService.getById(1L).getId());
 //        model.addAttribute("period_select", dashboardPeriodService.getPeriodByUser());
-        return "dashboardV1";
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()){
+            return "dashboardV1";
+        }else {
+            return "dashboardDemo";
+        }
+
     }
     @GetMapping("/dashboard")
         public String getDashboardTest(Model model) {
         model.addAttribute("title","Dashboard");
         model.addAttribute("params",dashboardParamService.list());
+        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
 //        model.addAttribute("dashboardParam", dashboardParamService.getById(1L).getName());
 //        model.addAttribute("dashboardParamId", dashboardParamService.getById(1L).getId());
         model.addAttribute("period_select", dashboardPeriodService.getPeriodByUser());
@@ -58,6 +66,7 @@ public class DashboardController {
         model.addAttribute("params", dashboardParamService.list());
         model.addAttribute("dashboardParam", dashboardParam.getName());
         model.addAttribute("dashboardParamId",dashboardParam.getId());
+        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
         String str = "";
         Long periodValue = 7L;
         switch (dashboardPeriodService.getPeriodByUserAndParam(dashboardParam).getDashboardPeriod()) {
@@ -83,6 +92,7 @@ public class DashboardController {
         model.addAttribute("title","ftpsettingList");
         model.addAttribute("settings",ftpService.list());
         model.addAttribute("params",dashboardParamService.list());
+        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
         return "ftpsettingList";
     }
     @GetMapping("/ftpsettingEdit/{ftpsetting}")
@@ -93,6 +103,7 @@ public class DashboardController {
         model.addAttribute("dashboardparams", dashboardParamService.list());
         model.addAttribute("dashparam", ftpSetting.getDashboardParam());
         model.addAttribute("params",dashboardParamService.list());
+        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
         return "ftpsettingEdit";
     }
     @PostMapping("/updateFtpsetting/{ftpsetting}")
@@ -132,12 +143,14 @@ public class DashboardController {
         model.addAttribute("dashboardparams", dashboardParamService.list());
         model.addAttribute("dashparam", ftpSetting.getDashboardParam());
         model.addAttribute("params",dashboardParamService.list());
+        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
         return "ftpsettingEdit";
     }
     @GetMapping("/ftpsettingNew")
     public String ftpsettingNew(Model model){
         model.addAttribute("title", "new ftpsetting");
         model.addAttribute("dashboardparams", dashboardParamService.list());
+        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
         return "ftpsettingNew";
     }
     @PostMapping("/createNewSetting")
@@ -176,6 +189,7 @@ public class DashboardController {
         model.addAttribute("title", "dashboardparamlist");
         model.addAttribute("dashboardParams", dashboardParamService.list());
         model.addAttribute("params",dashboardParamService.list());
+        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
         return "dashboardparamList";
     }
     @GetMapping("/dashboardparamEdit/{dashboardparam}")
@@ -183,6 +197,7 @@ public class DashboardController {
         model.addAttribute("title", "dashbordparam");
         model.addAttribute("dashboardparam", dashboardParam);
         model.addAttribute("params",dashboardParamService.list());
+        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
         return "dashboardparamEdit";
     }
     @PostMapping("/updateDashboardparam/{dashboardparam}")
@@ -202,6 +217,7 @@ public class DashboardController {
     public String dashboardparamNew(Model model){
         model.addAttribute("title", "new dashboardparam");
         model.addAttribute("params",dashboardParamService.list());
+        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
         return "dashboardparamNew";
     }
     @PostMapping("/deleteDashboardparam/{dashboardparam}")

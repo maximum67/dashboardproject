@@ -3,8 +3,9 @@ package com.example.dashboardproject.services;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
-import org.slf4j.Logger;
+import org.apache.log4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 
 public class FtpConnector {
 
-    Logger logger = LoggerFactory.getLogger(FtpConnector.class);
+    private static final Logger logger = Logger.getLogger(FtpConnector.class);
 
     public FTPClient connect(HashMap<String,String> map){
 
@@ -26,34 +27,22 @@ public class FtpConnector {
 
             int replyCode = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(replyCode)) {
-                 logger.info ("Operation failed. Server reply code: "+ replyCode);
+                 logger.info ("Нет подключения к серверу FTP. Код ошибки: "+ replyCode);
                 ftpClient.disconnect();
             }
             // входим на ftp server под именем и паролем
             boolean success
                     = ftpClient.login(map.get("login"), map.get("password"));
             if (!success) {
+                logger.info("Неверный логин или пароль для подключения к FTP серверу");
                 ftpClient.disconnect();
             }
             // назначим тип файла в соответствии с сервером
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE );
             ftpClient.enterLocalPassiveMode();
-
-            // change specific directory of ftp server from
-            // you want to download files.
-//            boolean changedRemoteDir
-//                    = ftpClient.changeWorkingDirectory(
-//                    "/home/testuser/directory");
-//            if (!changedRemoteDir) {
-//                logger.info(
-//                        "Remote directory not found."
-//                );
-//            }
         }
         catch (UnknownHostException E) {
-            logger.info(
-                    "No such ftp server"
-            );
+            logger.info("Сервер FTP не найден");
         }
         catch (IOException e) {
             logger.info(e.getMessage());
@@ -84,8 +73,6 @@ public class FtpConnector {
         }
         catch (IOException e) {
            return e.getMessage();
-        }
-  //      ftpClient.disconnect();
-  //      return "Соединение с сервером установлено";
+       }
     }
 }
