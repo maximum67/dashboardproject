@@ -83,6 +83,7 @@ public class DashboardController {
         };
         model.addAttribute("period_select", str);
         model.addAttribute("periodValue", periodValue);
+        model.addAttribute("parametrTable", v1service.getParametrTable(dashboardParam,Integer.parseInt(String.valueOf(periodValue))));
         return "dashboard";
     }
     //_________________________________________________________________________________________________________

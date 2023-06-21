@@ -101,7 +101,7 @@
       .card-form{
         column-count: 2;
         padding: 2px;
-        background: #f8f9fa;
+        /*background: #f8f9fa;*/
       }
       @media (max-width: 898px){
         .card-form {
@@ -202,7 +202,7 @@
                 Параметры
               </a>
             </div>
-          </li>
+          </li><hr>
 <!--          <li class="nav-item">-->
 <!--            <a class="nav-link" href="#">-->
 <!--              <span data-feather="shopping-cart" class="align-text-bottom"></span>-->
@@ -368,12 +368,12 @@
                 datasets: [{
                   label: /*[[${par.name}]]*/ 'Показатель',
                   data: yData,
-                  pointStyle: false,
+                  pointStyle: 'star',
                   fill: {
                     target: 'origin',
                     above: color
                   },
-                  borderWidth: 2
+                  borderWidth: 1
                 }]
 
               }

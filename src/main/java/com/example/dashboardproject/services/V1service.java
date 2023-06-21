@@ -67,6 +67,29 @@ public class V1service {
         }
         return listDashboardV1;
     }
-
+      public List<Map> getParametrTable(DashboardParam dashboardParam, Integer p){
+          List<Map> listDashboardV1 = new ArrayList<>();
+          DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+          Sort sort = Sort.by("date").ascending();
+          List<DashboardV1> dashboardV1s = dashboardV1repository.findAllByDashboardParam(dashboardParam, sort);
+          for (int i=dashboardV1s.size()-1; i>=0; i--) {
+              Map<String, String> map = new HashMap<>();
+              map.put("date", formatter.format(dashboardV1s.get(i).getDate()));
+              map.put("value", dashboardV1s.get(i).getValue());
+              if (i == 0) {
+                  map.put("valueDinamic", String.format("%.2f",Double.parseDouble(dashboardV1s.get(i).getValue())));
+                  map.put("valueDinamicPercent", "0,00%");
+              } else {
+                  map.put("valueDinamic", String.format("%.2f", Double.parseDouble(dashboardV1s.get(i).getValue()) - Double.parseDouble(dashboardV1s.get(i - 1).getValue())));
+                  map.put("valueDinamicPercent",String.format("%.2f",(Double.parseDouble(dashboardV1s.get(i).getValue())/Double.parseDouble(dashboardV1s.get(i - 1).getValue())-1)*100)+"%");
+              }
+              listDashboardV1.add(map);
+          }
+          int end = listDashboardV1.size();
+          if (p < listDashboardV1.size()) {
+              return listDashboardV1.subList(0, p);
+          }
+          return listDashboardV1;
+      }
 }
 
