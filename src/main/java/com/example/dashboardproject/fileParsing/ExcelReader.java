@@ -18,7 +18,6 @@ import java.util.Map;
 public class ExcelReader {
 
     private static final Logger logger = Logger.getLogger(ExcelReader.class);
-    private Object Integer;
 
     public Map<Integer, List<Object>> read(String filename) throws IOException {
         Workbook workbook = loadWorkbook(filename);
@@ -27,7 +26,6 @@ public class ExcelReader {
         while (sheetIterator.hasNext()) {
             Sheet sheet = sheetIterator.next();
             map = processSheet(sheet);
-            //   System.out.println();
         }
         return map;
     }
@@ -57,12 +55,14 @@ public class ExcelReader {
         }
         return data;
     }
+
     private void processRow(HashMap<Integer, List<Object>> data, int rowIndex, Row row) {
         data.put(rowIndex, new ArrayList<>());
         for (var cell : row) {
             processCell(cell, data.get(rowIndex));
         }
     }
+
     private void processCell(Cell cell, List<Object> dataRow) {
         switch (cell.getCellType()) {
             case STRING:
@@ -85,6 +85,5 @@ public class ExcelReader {
                 dataRow.add(" ");
         }
     }
-
 }
 

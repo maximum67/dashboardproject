@@ -5,9 +5,7 @@ import com.example.dashboardproject.services.FtpConnector;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.log4j.Logger;
-
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 
@@ -20,7 +18,6 @@ public class FtpDownloadFiles {
         HashMap<String, String> hashMap = new HashMap<>();
         Base64.Decoder decoder = Base64.getDecoder();
 
-//        FtpSetting ftpSetting = ftpSettingRepository.findById(id).orElse(null);
         hashMap.put("host", ftpSetting.getHost());
         hashMap.put("port", ftpSetting.getPort());
         hashMap.put("login", ftpSetting.getLogin());
@@ -33,7 +30,6 @@ public class FtpDownloadFiles {
         FTPClient ftpClient = ftpConnector.connect(hashMap);
 
         // перечислим все файлы, которые будут загружены
-
         FTPFile[] ftpFiles = ftpClient.listFiles(ftpSetting.getFilename());
 
         // установим каталог загрузки, в котором будут находиться все файлы

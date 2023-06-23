@@ -4,8 +4,6 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.log4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -16,7 +14,7 @@ public class FtpConnector {
 
     private static final Logger logger = Logger.getLogger(FtpConnector.class);
 
-    public FTPClient connect(HashMap<String,String> map){
+    public FTPClient connect(HashMap<String, String> map) {
 
         // создаем экземпляр FTPClient
         FTPClient ftpClient = new FTPClient();
@@ -27,7 +25,7 @@ public class FtpConnector {
 
             int replyCode = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(replyCode)) {
-                 logger.info ("Нет подключения к серверу FTP. Код ошибки: "+ replyCode);
+                logger.info("Нет подключения к серверу FTP. Код ошибки: " + replyCode);
                 ftpClient.disconnect();
             }
             // входим на ftp server под именем и паролем
@@ -38,41 +36,41 @@ public class FtpConnector {
                 ftpClient.disconnect();
             }
             // назначим тип файла в соответствии с сервером
-            ftpClient.setFileType(FTP.BINARY_FILE_TYPE );
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
             ftpClient.enterLocalPassiveMode();
-        }
-        catch (UnknownHostException E) {
+        } catch (UnknownHostException E) {
             logger.info("Сервер FTP не найден");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             logger.info(e.getMessage());
         }
         return ftpClient;
     }
-    public String checkConnection(HashMap<String,String> map) throws IOException{
+
+    public String checkConnection(HashMap<String, String> map) throws IOException {
 
         FTPClient ftpClient = new FTPClient();
         try {
             ftpClient.connect(map.get("host"), Integer.parseInt(map.get("port")));
             int replyCode = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(replyCode)) {
-                return  "Ошибка операции. Код ошибки: "+ replyCode;
+                logger.info("Ошибка операции. Код ошибки: " + replyCode);
+                return "Ошибка операции. Код ошибки: " + replyCode;
             }
             boolean success
                     = ftpClient.login(map.get("login"), map.get("password"));
             if (!success) {
                 ftpClient.disconnect();
                 return "Не верный логин или пароль";
-            }else{
+            } else {
                 ftpClient.disconnect();
                 return "Успешное подключение к серверу";
             }
+        } catch (UnknownHostException e) {
+            logger.info(e);
+            return "Не найден сервер";
+        } catch (IOException e) {
+            logger.info(e);
+            return e.getMessage();
         }
-        catch (UnknownHostException E) {
-           return  "Не найден сервер";
-        }
-        catch (IOException e) {
-           return e.getMessage();
-       }
     }
 }

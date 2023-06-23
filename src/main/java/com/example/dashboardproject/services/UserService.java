@@ -43,7 +43,9 @@ public class UserService {
         return true;
     }
 
-    public List<User> list() {return userRepository.findAll();}
+    public List<User> list() {
+        return userRepository.findAll();
+    }
 
     public void banUser(Long id) {
         User user = userRepository.findById(id).orElse(null);
@@ -70,9 +72,11 @@ public class UserService {
         }
     }
 
-    public void deleteUser(Long id) {userRepository.deleteById(id);}
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
 
-    public User getUserByPrincipal(){
+    public User getUserByPrincipal() {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

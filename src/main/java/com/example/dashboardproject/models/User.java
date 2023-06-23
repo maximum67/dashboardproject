@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.*;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @Data
 public class User implements UserDetails {
 
@@ -35,13 +35,17 @@ public class User implements UserDetails {
             fetch = FetchType.LAZY, mappedBy = "user")
     private List<LineSetting> lineSettings = new ArrayList<>();
 
-    public boolean isAdmin(){
+    public boolean isAdmin() {
         return roles.contains(Role.ROLE_ADMIN);
     }
 
-    public boolean isVisitor() {return roles.contains(Role.ROLE_VISITOR);}
+    public boolean isVisitor() {
+        return roles.contains(Role.ROLE_VISITOR);
+    }
 
-    public boolean isUser() {return roles.contains(Role.ROLE_USER);}
+    public boolean isUser() {
+        return roles.contains(Role.ROLE_USER);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -59,7 +63,7 @@ public class User implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonLocked()  {
+    public boolean isAccountNonLocked() {
         return true;
     }
 

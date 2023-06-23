@@ -6,7 +6,9 @@
     <meta name="description" content="">
     <title th:text="${title}">title</title>
 
-    <script type="text/javascript" src="https://me.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=ls7cwnc9yJB8LoeryW8mjKTi-BA_rHU1en-Nf1Ze25lBJ_Uy-DdMBMZVFgu-Nvcs0FBEQ_AsDd7HDMkHY-YpcYgO3LAc3LhHZtUesrsFFBo" charset="UTF-8"></script>
+    <script type="text/javascript"
+            src="https://me.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=ls7cwnc9yJB8LoeryW8mjKTi-BA_rHU1en-Nf1Ze25lBJ_Uy-DdMBMZVFgu-Nvcs0FBEQ_AsDd7HDMkHY-YpcYgO3LAc3LhHZtUesrsFFBo"
+            charset="UTF-8"></script>
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -24,7 +26,7 @@
     </style>
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/dashboard/">
     <link href="/css/cover.css" rel="stylesheet">
-    <link href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" type="text/css" rel="stylesheet" />
+    <link href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" type="text/css" rel="stylesheet"/>
 
 </head>
 <body class="d-flex h-100 text-center text-white bg-secondary">
@@ -35,7 +37,7 @@
             <h3 class="float-md-start mb-0">MADigital</h3>
             <nav class="nav nav-masthead justify-content-center float-md-end">
                 <a class="nav-link" href="#">+7 (910) 785-13-42</a>
-                <a class="nav-link" href="#">Смоленск,  Свердлова 47</a>
+                <a class="nav-link" href="#">Смоленск, Свердлова 47</a>
                 <a class="nav-link" href="javascript: document.logoutForm.submit()">Выход</a>
                 <form name="logoutForm" th:action="@{/auth/logout}" method="post" th:hidden="true">
                     <input hidden type="submit" value="Выход"/>
@@ -49,15 +51,14 @@
         <p class="lead">Веб-интерфейс для вывода текущих показателей.</p>
         <p class="lead">Для просмотра показателей нажмите ДАЛЕЕ.</p>
         <p class="lead"><br>
-          <a href="/dash/dashboardV1" class="btn btn-lg btn-secondary fw-bold border-white">ДАЛЕЕ</a>
+            <a href="/dash/dashboardV1" class="btn btn-lg btn-secondary fw-bold border-white">ДАЛЕЕ</a>
         </p>
     </main>
 
     <footer class="mt-auto text-white-50">
-        <p>Разработчик  <a href="https://madigital.ru/" class="text-white-50">MADigital.ru</a></p>
+        <p>Разработчик <a href="https://madigital.ru/" class="text-white-50">MADigital.ru</a></p>
     </footer>
 </div>
-
 
 
 </body>

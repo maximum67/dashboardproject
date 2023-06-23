@@ -1,10 +1,6 @@
 package com.example.dashboardproject.rest;
 
 import com.example.dashboardproject.models.DashboardParam;
-import com.example.dashboardproject.models.DashboardPeriod;
-import com.example.dashboardproject.models.DashboardV1;
-import com.example.dashboardproject.models.PeriodSetting;
-import com.example.dashboardproject.services.DashboardParamService;
 import com.example.dashboardproject.services.DashboardPeriodService;
 import com.example.dashboardproject.services.DashboardTypeLineService;
 import com.example.dashboardproject.services.V1service;
@@ -16,10 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import java.util.*;
 
-import static com.example.dashboardproject.models.TypeLine.LINE;
 
 @RestController
 @AllArgsConstructor
@@ -31,19 +25,20 @@ public class DashboardV1RestController {
     private final DashboardTypeLineService dashboardTypeLineService;
 
     @GetMapping("/V1/{dashboardParamId}")
-    public ResponseEntity<List> findByParam(@PathVariable ("dashboardParamId") DashboardParam dashboardParam ) {
+    public ResponseEntity<List> findByParam(@PathVariable("dashboardParamId") DashboardParam dashboardParam) {
         List<Map> list = v1service.listDashboardV1ByParam(dashboardParam);
         return new ResponseEntity<List>(list, HttpStatus.OK);
     }
 
     @GetMapping("/V2/{dashboardParamId}/{p}")
-    public ResponseEntity<List> findByParamPeriod(@PathVariable ("dashboardParamId") DashboardParam dashboardParam,
-                                                  @PathVariable ("p") Integer p) {
+    public ResponseEntity<List> findByParamPeriod(@PathVariable("dashboardParamId") DashboardParam dashboardParam,
+                                                  @PathVariable("p") Integer p) {
         List<Map> list = v1service.listDashboardV1ByParamPeriod(dashboardParam, p);
         return new ResponseEntity<List>(list, HttpStatus.OK);
     }
+
     @GetMapping("/V3/{dashboardParamId}")
-    public ResponseEntity<Long> getPeriod(@PathVariable ("dashboardParamId") DashboardParam dashboardParam ) {
+    public ResponseEntity<Long> getPeriod(@PathVariable("dashboardParamId") DashboardParam dashboardParam) {
         long periodValue = switch (dashboardPeriodService.getPeriodByUserAndParam(dashboardParam).getDashboardPeriod()) {
             case PERIOD_MONTH -> 30L;
             case PERIOD_YEAR -> 365L;
@@ -54,8 +49,8 @@ public class DashboardV1RestController {
     }
 
     @GetMapping("/V4/{dashboardParamId}")
-    public ResponseEntity<String> getTypeLine(@PathVariable ("dashboardParamId") DashboardParam dashboardParam ) {
-        String typeLine = switch (dashboardTypeLineService.getTypeLineByUserAndParam(dashboardParam).getTypeLine()){
+    public ResponseEntity<String> getTypeLine(@PathVariable("dashboardParamId") DashboardParam dashboardParam) {
+        String typeLine = switch (dashboardTypeLineService.getTypeLineByUserAndParam(dashboardParam).getTypeLine()) {
             case BAR -> "Гистограмма";
             case LINE_AREA -> "Область";
             case LINE_REGRESS -> "Область с регрессом";

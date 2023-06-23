@@ -29,22 +29,10 @@ public class DashboardPeriodService {
         }
     }
 
-    public void updateDashboardPeriod(PeriodSetting periodSetting){
+    public void updateDashboardPeriod(PeriodSetting periodSetting) {
         dashboardPeriodRepository.save(periodSetting);
     }
 
-    public void deleteDashboardPeriod(Long id){
-        dashboardPeriodRepository.deleteById(id);
-    }
-
-    public String getDashboardPeriod(Long id){
-        return switch (dashboardPeriodRepository.getReferenceById(id).getDashboardPeriod()) {
-            case PERIOD_MONTH -> "Период месяц";
-            case PERIOD_YEAR -> "Период год";
-            case PERIOD_QUARTER -> "Период квартал";
-            default -> "Период неделя";
-        };
-    }
     public String getPeriodByUser() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<PeriodSetting> periodSettings = dashboardPeriodRepository.findAll();
@@ -62,21 +50,22 @@ public class DashboardPeriodService {
         }
         return "Период";
     }
-    public PeriodSetting getPeriodByUserAndParam(DashboardParam dashboardParam){
+
+    public PeriodSetting getPeriodByUserAndParam(DashboardParam dashboardParam) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<PeriodSetting> periodSettings = dashboardPeriodRepository.findAll();
-        if (!periodSettings.isEmpty()){
+        if (!periodSettings.isEmpty()) {
             for (PeriodSetting periodSetting : periodSettings) {
-            if ((Objects.equals(periodSetting.getDashboardParam().getId(), dashboardParam.getId())) &&
-                    (Objects.equals(periodSetting.getUser().getId(), user.getId()))) {
-               return periodSetting;
+                if ((Objects.equals(periodSetting.getDashboardParam().getId(), dashboardParam.getId())) &&
+                        (Objects.equals(periodSetting.getUser().getId(), user.getId()))) {
+                    return periodSetting;
+                }
             }
-          }
             PeriodSetting periodSetting1 = new PeriodSetting();
             periodSetting1.setDashboardParam(dashboardParam);
             periodSetting1.setUser(user);
             return periodSetting1;
-       }else{
+        } else {
             PeriodSetting periodSetting2 = new PeriodSetting();
             periodSetting2.setDashboardParam(dashboardParam);
             periodSetting2.setUser(user);

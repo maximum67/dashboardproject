@@ -1,13 +1,11 @@
 package com.example.dashboardproject.models;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalTime;
 
 @Entity
-@Table(name="ftpstting")
+@Table(name = "ftpstting")
 @Data
 public class FtpSetting {
 
@@ -31,29 +29,28 @@ public class FtpSetting {
     @Column(name = "filename")
     private String filename;
 
-    @Column(name ="timeTask")
+    @Column(name = "timeTask")
     private LocalTime timeTask;
 
-    @Column(name ="active")
+    @Column(name = "active")
     private boolean active;
 
-    @Column(name="trDate")
+    @Column(name = "trDate")
     private int thDate;
 
-    @Column(name="thDate")
+    @Column(name = "thDate")
     private int trDate;
 
     @Column(name = "trValue")
     private int trValue;
 
-    @Column(name="thValue")
+    @Column(name = "thValue")
     private int thValue;
 
     @OneToOne(cascade = CascadeType.REFRESH,
             fetch = FetchType.LAZY)
     @JoinColumn
     private DashboardParam dashboardParam;
-
 
 }
 
