@@ -31,8 +31,6 @@ public class User implements UserDetails {
             fetch = FetchType.LAZY, mappedBy = "user")
     private List<PeriodSetting> periodSettings = new ArrayList<>();
 
-    //Security
-
     public boolean isAdmin(){
         return roles.contains(Role.ROLE_ADMIN);
     }

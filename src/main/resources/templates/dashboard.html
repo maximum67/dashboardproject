@@ -269,57 +269,190 @@
 
             <!--   __________________________________________________________________________________________________-->
 
-
             <div>
                 <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
             </div>
 
             <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
             <script th:inline="javascript">
                 let colors = ['#F0F4C3','#BDBDBD','#8BC34A','#CDDC39','#AFB42B','#B3E5FC','#F5F5F5','#DCEDC8','#03A9F4','#FFF9C4'];
+                let colorsBorder = ['#303F9F','#C5CAE9','#3F51B5','#BDBDBD','#607D8B','#757575','#536DFE','#4CAF50','#C8E6C9','#388E3C'];
                 let color = colors[Math.ceil(Math.random()*10)];
+                let colorBorder = colorsBorder[Math.ceil(Math.random()*10)];
                 // Получение контекста для рисования
                 let canvas = window.document.querySelector('canvas');
                 let context = canvas.getContext('2d');
                 // Функции
-                const createLineChart = (xData, yData) => {
-                    let data = {
-                        labels: xData,
-                        datasets: [{
-                            label: /*[[${dashboardParam}]]*/ 'Показатель',
-                            data: yData,
-                            pointStyle: 'star',
-                            fill: {
-                                target: 'origin',
-                                above: color
-                            },
-                            borderWidth: 1
-                        }]
-                    }
-                    let config = {
-                        type: 'line',
-                        data: data
-                    }
-                    let chart = new Chart(context, config);
-                }
-                // Получение данных с сервера
-                //axios.get('https://www.alphavantage.co/query?function=ALUMINUM&interval=monthly&apikey=demo')
-
-                axios.get('/api/dashboard/V2/'+[[${dashboardParamId}]]+'/'+[[${periodValue}]])
-                    .then((response)=>{
-                        let data = response.data;
-                        let xData = [];
-                        let yData = [];
-                        for(let i = 0; i < data.length; i++){
-                            xData.push(data[i].date);
-                            yData.push(data[i].value);
+                if(false) {
+                    const createAreaChart = (xData, yData) => {
+                        let data = {
+                            labels: xData,
+                            datasets: [{
+                                label: /*[[${dashboardParam}]]*/ 'Показатель',
+                                data: yData,
+                                pointStyle: 'star',
+                                fill: {
+                                    target: 'origin',
+                                    above: color
+                                },
+                                borderWidth: 1,
+                                borderColor: colorBorder
+                            }]
                         }
-                        createLineChart(xData, yData);
-                    });
-                // _____________________________________________________________________________________________
-            </script>
+                        let config = {
+                            type: 'line',
+                            data: data
+                        }
+                        let chart = new Chart(context, config);
+                    }
+                    // Получение данных с сервера
+                    //axios.get('https://www.alphavantage.co/query?function=ALUMINUM&interval=monthly&apikey=demo')
+                    axios.get('/api/dashboard/V2/' + [[${dashboardParamId}]] + '/' + [[${periodValue}]])
+                        .then((response) => {
+                            let data = response.data;
+                            let xData = [];
+                            let yData = [];
+                            for (let i = 0; i < data.length; i++) {
+                                xData.push(data[i].date);
+                                yData.push(data[i].value);
+                            }
+                            createAreaChart(xData, yData);
+                        });
 
+                }else if(false){
+                    // _____________________________________________________________________________________________
+                    const createBarChart = (xData, yData) => {
+                        let data = {
+                            labels: xData,
+                            datasets: [{
+                                label: /*[[${dashboardParam}]]*/ 'Показатель',
+                                data: yData,
+                                backgroundColor: color,
+                                borderColor: colorBorder,
+                                borderWidth: 2
+                            }]
+                        }
+                        let config = {
+                            type: 'bar',
+                            data: data
+                        }
+                        let chart = new Chart(context, config);
+                    }
+                    // Получение данных с сервера
+                    //axios.get('https://www.alphavantage.co/query?function=ALUMINUM&interval=monthly&apikey=demo')
+                    axios.get('/api/dashboard/V2/' + [[${dashboardParamId}]] + '/' + [[${periodValue}]])
+                        .then((response) => {
+                            let data = response.data;
+                            let xData = [];
+                            let yData = [];
+                            for (let i = 0; i < data.length; i++) {
+                                xData.push(data[i].date);
+                                yData.push(data[i].value);
+                            }
+                            createBarChart(xData, yData);
+                        });
+                }else if(false){
+                    const createLineChart = (xData, yData) => {
+                        let data = {
+                            labels: xData,
+                            datasets: [{
+                                label: /*[[${dashboardParam}]]*/ 'Показатель',
+                                data: yData,
+                                pointStyle: 'crossRot',
+                                pointRadius: 4,
+                                fill: false,
+                                borderColor: colorBorder,
+                                borderWidth: 2
+                            }]
+                        }
+                        let config = {
+                            type: 'line',
+                            data: data
+                        }
+                        let chart = new Chart(context, config);
+                    }
+                    // Получение данных с сервера
+                    //axios.get('https://www.alphavantage.co/query?function=ALUMINUM&interval=monthly&apikey=demo')
+                    axios.get('/api/dashboard/V2/' + [[${dashboardParamId}]] + '/' + [[${periodValue}]])
+                        .then((response) => {
+                            let data = response.data;
+                            let xData = [];
+                            let yData = [];
+                            for (let i = 0; i < data.length; i++) {
+                                xData.push(data[i].date);
+                                yData.push(data[i].value);
+                            }
+                            createLineChart(xData, yData);
+                        });
+                }else{
+                    const createAreaLineChart = (xData, yData, yData1) => {
+                        let data = {
+                            labels: xData,
+                            datasets: [{
+                                type: 'line',
+                                label: /*[[${dashboardParam}]]*/ 'Показатель',
+                                data: yData,
+                                pointStyle: 'star',
+                                fill: {
+                                    target: 'origin',
+                                    above: color
+                                },
+                                borderWidth: 1,
+                                order: 2
+                            },{
+                                type: 'line',
+                                label: 'Регрессия',
+                                data: yData1,
+                                pointStyle: false,
+                                fill: false,
+                                borderWidth: 2,
+                                order: 1,
+                                borderColor: '#E64A19'
+                            }]
+                        }
+                        let config = {
+                            data: data
+                        }
+                        let chart = new Chart(context, config);
+                    }
+                    // Получение данных с сервера
+                    //axios.get('https://www.alphavantage.co/query?function=ALUMINUM&interval=monthly&apikey=demo')
+                    axios.get('/api/dashboard/V2/' + [[${dashboardParamId}]] + '/' + [[${periodValue}]])
+                        .then((response) => {
+                            let data = response.data;
+                            let xData = [];
+                            let yData = [];
+                            let yData1 = [];
+                            let sumxx = 0;
+                            let sumx = 0;
+                            let sumxy = 0;
+                            let sumy = 0;
+                            for (let i = 0; i < data.length; i++) {
+                                xData.push(data[i].date);
+                                yData.push(data[i].value);
+                                sumx = sumx+i;
+                                sumxx = sumxx +i*i;
+                                sumy = sumy +Number(data[i].value);
+                                sumxy = sumxy + Number(data[i].value)*i;
+                            }
+                            // Вычисляем формулу прямой регресса y=a+b*x________________
+                            let a = (sumy*sumxx-sumx*sumxy)/(data.length*sumxx-sumx*sumx);
+                            let b = (data.length*sumxy-sumx*sumy)/(data.length*sumxx-sumx*sumx);
+                            //__________________________________________________________
+                            for (let i = 0; i < data.length; i++) {
+                                yData1.push(a+b*i);
+                            }
+
+                            createAreaLineChart(xData, yData, yData1);
+                          //  createAreaLineChart(xData, yData1);
+
+                        });
+
+                }
+
+            </script>
 
             <h2>Таблица показателей</h2>
             <div class="table-responsive">

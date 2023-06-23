@@ -55,7 +55,7 @@ public class ThreadTaskFileParsing extends Thread{
          while (!currentThread().isInterrupted()){
             try {
 //                Thread.sleep(timesleep);
-                Thread.sleep(2000);
+                Thread.sleep(3000);
                 ftpDownloadFiles.ftpDownloadFiles(ftpSetting);
                 parsingWork.parsingFile(ftpSetting, v1service);
             } catch (InterruptedException e) {
