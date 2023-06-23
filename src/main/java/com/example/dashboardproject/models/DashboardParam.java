@@ -32,4 +32,7 @@ public class DashboardParam {
             fetch = FetchType.EAGER, mappedBy = "dashboardParam")
     private List<PeriodSetting> periodSettings = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER, mappedBy = "dashboardParam")
+    private List<LineSetting> lineSettings = new ArrayList<>();
 }

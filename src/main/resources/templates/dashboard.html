@@ -245,10 +245,22 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2" th:text="${dashboardParam}">Dashboard</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
-                    <div class="btn-group me-2">
-                        <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar" aria-hidden="true">
+                            <line x1="13" y1="16" x2="21" y2="5"></line>
+                            <line x1="13" y1="6" x2="13" y2="16"></line>
+                            <line x1="1" y1="19" x2="13" y2="6"></line>
+                            <line x1="1" y1="20" x2="1" y2="1"></line>
+                            <line x1="1" y1="20" x2="21" y2="20"></line>
+                        </svg>
+                        <span th:text="${typeline_select}">Диаграмма</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/1/'+${dashboardParamId}">Линия</a></li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/2/'+${dashboardParamId}">Гистограмм</a></li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/3/'+${dashboardParamId}">Область</a></li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/4/'+${dashboardParamId}">Область с регрессом</a></li>
+                    </ul>
                     <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar" aria-hidden="true">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -285,7 +297,7 @@
                 let canvas = window.document.querySelector('canvas');
                 let context = canvas.getContext('2d');
                 // Функции
-                if(false) {
+                if ([[${typeline_select}]]==='Область') {
                     const createAreaChart = (xData, yData) => {
                         let data = {
                             labels: xData,
@@ -321,7 +333,7 @@
                             createAreaChart(xData, yData);
                         });
 
-                }else if(false){
+                }else if([[${typeline_select}]]==='Гистограмма'){
                     // _____________________________________________________________________________________________
                     const createBarChart = (xData, yData) => {
                         let data = {
@@ -353,7 +365,7 @@
                             }
                             createBarChart(xData, yData);
                         });
-                }else if(false){
+                }else if([[${typeline_select}]]==='Линия'){
                     const createLineChart = (xData, yData) => {
                         let data = {
                             labels: xData,
@@ -449,9 +461,7 @@
                           //  createAreaLineChart(xData, yData1);
 
                         });
-
                 }
-
             </script>
 
             <h2>Таблица показателей</h2>

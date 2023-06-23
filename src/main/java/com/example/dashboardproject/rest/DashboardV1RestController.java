@@ -6,6 +6,7 @@ import com.example.dashboardproject.models.DashboardV1;
 import com.example.dashboardproject.models.PeriodSetting;
 import com.example.dashboardproject.services.DashboardParamService;
 import com.example.dashboardproject.services.DashboardPeriodService;
+import com.example.dashboardproject.services.DashboardTypeLineService;
 import com.example.dashboardproject.services.V1service;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
+import static com.example.dashboardproject.models.TypeLine.LINE;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/dashboard")
@@ -25,6 +28,7 @@ public class DashboardV1RestController {
 
     private final V1service v1service;
     private final DashboardPeriodService dashboardPeriodService;
+    private final DashboardTypeLineService dashboardTypeLineService;
 
     @GetMapping("/V1/{dashboardParamId}")
     public ResponseEntity<List> findByParam(@PathVariable ("dashboardParamId") DashboardParam dashboardParam ) {
@@ -47,5 +51,16 @@ public class DashboardV1RestController {
             default -> 7L;
         };
         return new ResponseEntity<>(periodValue, HttpStatus.OK);
+    }
+
+    @GetMapping("/V4/{dashboardParamId}")
+    public ResponseEntity<String> getTypeLine(@PathVariable ("dashboardParamId") DashboardParam dashboardParam ) {
+        String typeLine = switch (dashboardTypeLineService.getTypeLineByUserAndParam(dashboardParam).getTypeLine()){
+            case BAR -> "Гистограмма";
+            case LINE_AREA -> "Область";
+            case LINE_REGRESS -> "Область с регрессом";
+            default -> "Линия";
+        };
+        return new ResponseEntity<>(typeLine, HttpStatus.OK);
     }
 }

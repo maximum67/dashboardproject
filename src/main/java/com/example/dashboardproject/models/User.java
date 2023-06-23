@@ -31,6 +31,10 @@ public class User implements UserDetails {
             fetch = FetchType.LAZY, mappedBy = "user")
     private List<PeriodSetting> periodSettings = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, mappedBy = "user")
+    private List<LineSetting> lineSettings = new ArrayList<>();
+
     public boolean isAdmin(){
         return roles.contains(Role.ROLE_ADMIN);
     }

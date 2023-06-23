@@ -359,46 +359,234 @@
         </div>
 
         <script type="text/javascript" th:inline="javascript">
-          for (let a = 1; a < 2; a++) {
-            let colors = ['#F0F4C3','#BDBDBD','#8BC34A','#CDDC39','#AFB42B','#B3E5FC','#F5F5F5','#DCEDC8','#03A9F4','#FFF9C4'];
-            let color = colors[Math.ceil(Math.random()*10)];
-            const createLineChart = (xData, yData) => {
-              let data = {
-                labels: xData,
-                datasets: [{
-                  label: /*[[${par.name}]]*/ 'Показатель',
-                  data: yData,
-                  pointStyle: 'star',
-                  fill: {
-                    target: 'origin',
-                    above: color
-                  },
-                  borderWidth: 1
-                }]
 
-              }
-              let myChart = new Chart(document.querySelector('#myChart' + [[${par.id}]]).getContext('2d'), {
-                type: 'line',
-                data: data
-              });
-            }
-            let periodValue = 7;
-            axios.get('/api/dashboard/V3/' + [[${par.id}]])
+          for (let a = 1; a < 2; a++) {
+            let typeLine = "";
+            axios.get('/api/dashboard/V4/' + [[${par.id}]])
                     .then((response) => {
-                      periodValue = response.data;
-                      axios.get('/api/dashboard/V2/' + [[${par.id}]] + '/' + periodValue)
-                              .then((response) => {
-                                let data = response.data;
-                                let xData = [];
-                                let yData = [];
-                                for (let i = 0; i < data.length; i++) {
-                                  xData.push(data[i].date);
-                                  yData.push(data[i].value);
-                                }
-                                createLineChart(xData, yData);
-                              });
+                      typeLine = response.data;
+
+            let colors = ['#F0F4C3', '#BDBDBD', '#8BC34A', '#CDDC39', '#AFB42B', '#B3E5FC', '#F5F5F5', '#DCEDC8', '#03A9F4', '#FFF9C4'];
+            let colorsBorder = ['#303F9F', '#C5CAE9', '#3F51B5', '#BDBDBD', '#607D8B', '#757575', '#536DFE', '#4CAF50', '#C8E6C9', '#388E3C'];
+            let color = colors[Math.ceil(Math.random() * 10)];
+            let colorBorder = colorsBorder[Math.ceil(Math.random() * 10)];
+            // Получение контекста для рисования
+            // Функции
+            if (typeLine === "Область") {
+              const createAreaChart = (xData, yData) => {
+                let data = {
+                  labels: xData,
+                  datasets: [{
+                    label: /*[[${par.name}]]*/ 'Показатель',
+                    data: yData,
+                    pointStyle: 'star',
+                    fill: {
+                      target: 'origin',
+                      above: color
+                    },
+                    borderWidth: 1,
+                    borderColor: colorBorder
+                  }]
+                }
+                let chart = new Chart(document.querySelector('#myChart' + [[${par.id}]]).getContext('2d'),
+                        {type: 'line', data: data});
+              }
+              // Получение данных с сервера
+              //axios.get('https://www.alphavantage.co/query?function=ALUMINUM&interval=monthly&apikey=demo')
+              let periodValue = 7;
+              axios.get('/api/dashboard/V3/' + [[${par.id}]])
+                      .then((response) => {
+                        periodValue = response.data;
+                        axios.get('/api/dashboard/V2/' + [[${par.id}]] + '/' + periodValue)
+                                .then((response) => {
+                                  let data = response.data;
+                                  let xData = [];
+                                  let yData = [];
+                                  for (let i = 0; i < data.length; i++) {
+                                    xData.push(data[i].date);
+                                    yData.push(data[i].value);
+                                  }
+                                  createAreaChart(xData, yData);
+                                });
+                      });
+
+            } else if (typeLine === "Гистограмма") {
+              // _____________________________________________________________________________________________
+              const createBarChart = (xData, yData) => {
+                let data = {
+                  labels: xData,
+                  datasets: [{
+                    label: /*[[${par.name}]]*/ 'Показатель',
+                    data: yData,
+                    backgroundColor: color,
+                    borderColor: colorBorder,
+                    borderWidth: 2
+                  }]
+                }
+                let chart = new Chart(document.querySelector('#myChart' + [[${par.id}]]).getContext('2d'),
+                        {type: 'bar', data: data});
+              }
+              // Получение данных с сервера
+              //axios.get('https://www.alphavantage.co/query?function=ALUMINUM&interval=monthly&apikey=demo')
+              let periodValue = 7;
+              axios.get('/api/dashboard/V3/' + [[${par.id}]])
+                      .then((response) => {
+                        periodValue = response.data;
+                        axios.get('/api/dashboard/V2/' + [[${par.id}]] + '/' + periodValue)
+                                .then((response) => {
+                                  let data = response.data;
+                                  let xData = [];
+                                  let yData = [];
+                                  for (let i = 0; i < data.length; i++) {
+                                    xData.push(data[i].date);
+                                    yData.push(data[i].value);
+                                  }
+                                  createBarChart(xData, yData);
+                                });
+                      });
+            } else if (typeLine === "Линия") {
+              const createLineChart = (xData, yData) => {
+                let data = {
+                  labels: xData,
+                  datasets: [{
+                    label: /*[[${par.name}]]*/ 'Показатель',
+                    data: yData,
+                    pointStyle: 'crossRot',
+                    pointRadius: 4,
+                    fill: false,
+                    borderColor: colorBorder,
+                    borderWidth: 2
+                  }]
+                }
+                let chart = new Chart(document.querySelector('#myChart' + [[${par.id}]]).getContext('2d'),
+                        {type: 'line', data: data});
+              }
+              // Получение данных с сервера
+              //axios.get('https://www.alphavantage.co/query?function=ALUMINUM&interval=monthly&apikey=demo')
+              let periodValue = 7;
+              axios.get('/api/dashboard/V3/' + [[${par.id}]])
+                      .then((response) => {
+                        periodValue = response.data;
+                        axios.get('/api/dashboard/V2/' + [[${par.id}]] + '/' + periodValue)
+                                .then((response) => {
+                                  let data = response.data;
+                                  let xData = [];
+                                  let yData = [];
+                                  for (let i = 0; i < data.length; i++) {
+                                    xData.push(data[i].date);
+                                    yData.push(data[i].value);
+                                  }
+                                  createLineChart(xData, yData);
+                                });
+                      });
+            } else {
+              const createAreaLineChart = (xData, yData, yData1) => {
+                let data = {
+                  labels: xData,
+                  datasets: [{
+                    type: 'line',
+                    label: /*[[${par.name}]]*/ 'Показатель',
+                    data: yData,
+                    pointStyle: 'star',
+                    fill: {
+                      target: 'origin',
+                      above: color
+                    },
+                    borderWidth: 1,
+                    order: 2
+                  }, {
+                    type: 'line',
+                    label: 'Регрессия',
+                    data: yData1,
+                    pointStyle: false,
+                    fill: false,
+                    borderWidth: 2,
+                    order: 1,
+                    borderColor: '#E64A19'
+                  }]
+                }
+                let chart = new Chart(document.querySelector('#myChart' + [[${par.id}]]).getContext('2d'), {data: data});
+              }
+              // Получение данных с сервера
+              //axios.get('https://www.alphavantage.co/query?function=ALUMINUM&interval=monthly&apikey=demo')
+              let periodValue = 7;
+              axios.get('/api/dashboard/V3/' + [[${par.id}]])
+                      .then((response) => {
+                        periodValue = response.data;
+              axios.get('/api/dashboard/V2/' + [[${par.id}]] + '/' + periodValue)
+                      .then((response) => {
+                        let data = response.data;
+                        let xData = [];
+                        let yData = [];
+                        let yData1 = [];
+                        let sumxx = 0;
+                        let sumx = 0;
+                        let sumxy = 0;
+                        let sumy = 0;
+                        for (let i = 0; i < data.length; i++) {
+                          xData.push(data[i].date);
+                          yData.push(data[i].value);
+                          sumx = sumx + i;
+                          sumxx = sumxx + i * i;
+                          sumy = sumy + Number(data[i].value);
+                          sumxy = sumxy + Number(data[i].value) * i;
+                        }
+                        // Вычисляем формулу прямой регресса y=a+b*x________________
+                        let a = (sumy * sumxx - sumx * sumxy) / (data.length * sumxx - sumx * sumx);
+                        let b = (data.length * sumxy - sumx * sumy) / (data.length * sumxx - sumx * sumx);
+                        //__________________________________________________________
+                        for (let i = 0; i < data.length; i++) {
+                          yData1.push(a + b * i);
+                        }
+
+                        createAreaLineChart(xData, yData, yData1);
+                        //  createAreaLineChart(xData, yData1);
+
+                      });
+                      });
+            }
                     });
           }
+            //_____________________________________________________________________________________________
+          //   let colors = ['#F0F4C3','#BDBDBD','#8BC34A','#CDDC39','#AFB42B','#B3E5FC','#F5F5F5','#DCEDC8','#03A9F4','#FFF9C4'];
+          //   let color = colors[Math.ceil(Math.random()*10)];
+          //   const createLineChart = (xData, yData) => {
+          //     let data = {
+          //       labels: xData,
+          //       datasets: [{
+          //         label: /*[[${par.name}]]*/ 'Показатель',
+          //         data: yData,
+          //         pointStyle: 'star',
+          //         fill: {
+          //           target: 'origin',
+          //           above: color
+          //         },
+          //         borderWidth: 1
+          //       }]
+          //
+          //     }
+          //     let myChart = new Chart(document.querySelector('#myChart' + [[${par.id}]]).getContext('2d'), {
+          //       type: 'line',
+          //       data: data
+          //     });
+          //   }
+          //   let periodValue = 7;
+          //   axios.get('/api/dashboard/V3/' + [[${par.id}]])
+          //           .then((response) => {
+          //             periodValue = response.data;
+          //             axios.get('/api/dashboard/V2/' + [[${par.id}]] + '/' + periodValue)
+          //                     .then((response) => {
+          //                       let data = response.data;
+          //                       let xData = [];
+          //                       let yData = [];
+          //                       for (let i = 0; i < data.length; i++) {
+          //                         xData.push(data[i].date);
+          //                         yData.push(data[i].value);
+          //                       }
+          //                       createLineChart(xData, yData);
+          //                     });
+          //           });
+          // }
         </script>
       </div>
       </div>

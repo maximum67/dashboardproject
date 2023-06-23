@@ -31,6 +31,7 @@ public class DashboardController {
     private final UserService userService;
     private final DashboardParamService dashboardParamService;
     private final DashboardPeriodService dashboardPeriodService;
+    private final DashboardTypeLineService dashboardTypeLineService;
     Base64.Decoder decoder = Base64.getDecoder();
     Base64.Encoder encoder = Base64.getEncoder();
 
@@ -58,6 +59,7 @@ public class DashboardController {
 //        model.addAttribute("dashboardParam", dashboardParamService.getById(1L).getName());
 //        model.addAttribute("dashboardParamId", dashboardParamService.getById(1L).getId());
         model.addAttribute("period_select", dashboardPeriodService.getPeriodByUser());
+        model.addAttribute("typeline_select",dashboardTypeLineService.getTypeLineByUser());
             return "dashboard";
    }
     @GetMapping("/dashboard/{dashboardParam}")
@@ -81,7 +83,15 @@ public class DashboardController {
             break;
             default : str = "Период неделя";
         };
+        String str2 = "";
+        switch (dashboardTypeLineService.getTypeLineByUserAndParam(dashboardParam).getTypeLine()){
+            case BAR -> str2 = "Гистограмма";
+            case LINE_AREA -> str2 = "Область";
+            case LINE_REGRESS -> str2 = "Область с регрессом";
+            default -> str2 = "Линия";
+        };
         model.addAttribute("period_select", str);
+        model.addAttribute("typeline_select", str2);
         model.addAttribute("periodValue", periodValue);
         model.addAttribute("parametrTable", v1service.getParametrTable(dashboardParam,Integer.parseInt(String.valueOf(periodValue))));
         return "dashboard";
@@ -269,6 +279,28 @@ public class DashboardController {
         return "redirect:/dash/dashboard/"+dashboardParam.getId();
 
     }
+
+    @GetMapping("/typeLine/{p}/{dashboardParamId}")
+    public String getLineSetting(@PathVariable ("p") Long p, @PathVariable ("dashboardParamId") Long id){
+        DashboardParam dashboardParam = dashboardParamService.getById(id);
+        if(dashboardParam.getId()==1000000000L) return "redirect:/dash/dashboard";
+        LineSetting lineSetting = dashboardTypeLineService.getTypeLineByUserAndParam(dashboardParam);
+        if (p == 1L) {
+           lineSetting.setTypeLine(TypeLine.LINE);
+        } else if (p == 2L) {
+            lineSetting.setTypeLine(TypeLine.BAR);
+        } else if (p == 3L) {
+            lineSetting.setTypeLine(TypeLine.LINE_AREA);
+        } else if (p == 4L) {
+            lineSetting.setTypeLine(TypeLine.LINE_REGRESS);
+        } else {
+            lineSetting.setTypeLine(TypeLine.LINE);
+        }
+        dashboardTypeLineService.updateDashboardTypeline(lineSetting);
+        return "redirect:/dash/dashboard/"+dashboardParam.getId();
+
+    }
+
 
 }
 
