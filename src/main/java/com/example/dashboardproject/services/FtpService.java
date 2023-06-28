@@ -1,6 +1,6 @@
 package com.example.dashboardproject.services;
 
-import com.example.dashboardproject.fileParsing.ThreadTaskFileParsing;
+import com.example.dashboardproject.controller.fileParsing.ThreadTaskFileParsing;
 import com.example.dashboardproject.models.FtpSetting;
 import com.example.dashboardproject.repositories.FtpSettingRepository;
 import lombok.RequiredArgsConstructor;

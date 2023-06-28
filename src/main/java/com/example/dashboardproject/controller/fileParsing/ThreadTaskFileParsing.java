@@ -1,4 +1,4 @@
-package com.example.dashboardproject.fileParsing;
+package com.example.dashboardproject.controller.fileParsing;
 
 import com.example.dashboardproject.models.FtpSetting;
 import com.example.dashboardproject.services.V1service;
@@ -56,20 +56,23 @@ public class ThreadTaskFileParsing extends Thread {
         } catch (InterruptedException e) {
             logger.info("Поток остановлен");
             logger.info(e);
+            currentThread().interrupt();
         }
+
         while (!currentThread().isInterrupted()) {
             try {
                 ftpDownloadFiles.ftpDownloadFiles(ftpSetting);
                 parsingWork.parsingFile(ftpSetting, v1service);
                 Thread.sleep(86400000);
             } catch (InterruptedException e) {
-                logger.info("Поток остановлен");
+                logger.info("Парсинг остановлен");
                 logger.info(e);
                 break;
             } catch (IOException e) {
                 logger.info(e);
             }
         }
+
     }
 
 }
