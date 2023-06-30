@@ -143,6 +143,7 @@ public class DashboardController {
         map.put("port", ftpSetting.getPort());
         map.put("login", ftpSetting.getLogin());
         map.put("password", new String(decoder.decode(ftpSetting.getPassword())));
+        model.addAttribute("title", "ftpsettingEdit");
         model.addAttribute("message", ftpConnector.checkConnection(map));
         model.addAttribute("ftpsetting", ftpSetting);
         model.addAttribute("password", new String(decoder.decode(ftpSetting.getPassword())));

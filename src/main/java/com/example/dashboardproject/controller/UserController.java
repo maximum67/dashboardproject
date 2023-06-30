@@ -36,6 +36,7 @@ public class UserController {
 
     @GetMapping("/userEdit/{user}")
     public String userEdit(@PathVariable("user") User user, Model model) {
+        model.addAttribute("title", "Пользователи");
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
         model.addAttribute("params", dashboardParamService.list());
