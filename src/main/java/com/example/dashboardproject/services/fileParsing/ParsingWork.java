@@ -1,4 +1,4 @@
-package com.example.dashboardproject.controller.fileParsing;
+package com.example.dashboardproject.services.fileParsing;
 
 import com.example.dashboardproject.models.DashboardV1;
 import com.example.dashboardproject.models.FtpSetting;

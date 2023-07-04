@@ -1,0 +1,33 @@
+version: '3.1'
+
+services:
+
+  mysql:
+    image: mysql
+    container_name: mysql
+    restart: always
+    expose:
+      - "3306"
+    environment:
+       MYSQL_ROOT_PASSWORD: Aspirin15
+       MYSQL_DATABASE: dashboard
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: admin_db
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_ARBITRARY=1
+
+  dashboard:
+    build: ./
+    image: maximum67/dashboard
+    container_name: dashboard
+    ports:
+      - "8001:8081"
+    depends_on:
+      - mysql
+
+

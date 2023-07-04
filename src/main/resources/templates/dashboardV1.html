@@ -111,6 +111,16 @@
                 column-count: auto;
             }
         }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(500px,1fr));
+            grid-gap: 1rem;
+        }
+        .grid>div {
+            padding: 1.5rem;
+            border-radius: 1rem;
+        }
     </style>
 
 
