@@ -114,12 +114,17 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(500px,1fr));
+            grid-template-columns: 1fr 1fr;
             grid-gap: 1rem;
         }
         .grid>div {
-            padding: 1.5rem;
-            border-radius: 1rem;
+            /*padding: 0.5rem;*/
+            border-radius: 0.5rem;
+        }
+        @media (max-width: 990px) {
+            .grid{
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 
@@ -205,8 +210,8 @@
             aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search"
-           aria-label="Search">
+<!--    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search"-->
+<!--           aria-label="Search">-->
     <div class="navbar-nav">
         <div class="nav-item text-nowrap">
             <a class="nav-link px-3" href="javascript: document.logoutForm.submit()">Выйти</a>
@@ -270,10 +275,12 @@
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 
-            <div class="card-form">
-                <div th:each="par, iterStat : ${params}" class="card">
+<!--            <div class="card-form">-->
+            <div class="grid">
+                <div th:each="par, iterStat : ${paramList}" class="card">
 
-                    <div class="card-content">
+<!--                    <div class="card-content">-->
+                    <div>
                         <canvas th:id="'myChart'+${par.id}" width="900" height="380"></canvas>
                         <br>
                     </div>
@@ -465,7 +472,6 @@
                                     }
                                 });
                         }
-
                     </script>
                 </div>
             </div>

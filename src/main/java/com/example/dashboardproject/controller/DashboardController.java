@@ -24,6 +24,7 @@ public class DashboardController {
     private final DashboardParamService dashboardParamService;
     private final DashboardPeriodService dashboardPeriodService;
     private final DashboardTypeLineService dashboardTypeLineService;
+    private final HiddenSettingService hiddenSettingService;
     Base64.Decoder decoder = Base64.getDecoder();
     Base64.Encoder encoder = Base64.getEncoder();
 
@@ -31,6 +32,7 @@ public class DashboardController {
     public String getDashboard(Model model) {
         model.addAttribute("title", "Dashboard");
         model.addAttribute("params", dashboardParamService.list());
+        model.addAttribute("paramList", dashboardParamService.findAllByHidden());
         model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
         if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
             return "dashboardV1";
@@ -86,7 +88,22 @@ public class DashboardController {
         model.addAttribute("typeline_select", str2);
         model.addAttribute("periodValue", periodValue);
         model.addAttribute("parametrTable", v1service.getParametrTable(dashboardParam, Integer.parseInt(String.valueOf(periodValue))));
+        model.addAttribute("isHidden", hiddenSettingService.getHiddenSettingByUserAndParam(dashboardParam).getIsHidden());
         return "dashboard";
+    }
+    @GetMapping("/updateHiddenDashboardParam/{dashboardParam}/{n}")
+    public String updateHiddenDashboardParam(@PathVariable ("dashboardParam") DashboardParam dashboardParam,
+                                             @PathVariable ("n") Long n){
+        if (n==1) {
+            hiddenSettingService.getHiddenSettingByUserAndParam(dashboardParam).setIsHidden(true);
+            HiddenSetting hiddenSetting1 = hiddenSettingService.getHiddenSettingByUserAndParam(dashboardParam);
+            hiddenSettingService.updateHiddenSetting(hiddenSetting1);
+        }else {
+            hiddenSettingService.getHiddenSettingByUserAndParam(dashboardParam).setIsHidden(false);
+            HiddenSetting hiddenSetting2 = hiddenSettingService.getHiddenSettingByUserAndParam(dashboardParam);
+            hiddenSettingService.updateHiddenSetting(hiddenSetting2);
+        }
+        return "redirect:/dash/dashboard/"+dashboardParam.getId();
     }
     //______________________________________________________________________________________________________________
 
@@ -213,7 +230,8 @@ public class DashboardController {
     }
 
     @PostMapping("/updateDashboardparam/{dashboardparam}")
-    public String updateDashboardParam(@RequestParam("name") String name, @PathVariable("dashboardparam") DashboardParam dashboardParam) {
+    public String updateDashboardParam(@RequestParam("name") String name,
+                                      @PathVariable("dashboardparam") DashboardParam dashboardParam) {
         dashboardParam.setName(name);
         dashboardParamService.updateDashboardParam(dashboardParam);
         return "redirect:/dash/dashboardparamList";

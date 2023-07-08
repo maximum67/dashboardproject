@@ -33,4 +33,8 @@ public class DashboardParam {
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.EAGER, mappedBy = "dashboardParam")
     private List<LineSetting> lineSettings = new ArrayList<>();
+
+    @OneToMany(cascade=CascadeType.ALL,
+            fetch = FetchType.EAGER,mappedBy = "dashboardParam")
+    private List<HiddenSetting> hiddenSetting = new ArrayList<>();
 }

@@ -85,6 +85,43 @@
         .bd-mode-toggle {
             z-index: 1500;
         }
+
+        .form_toggle {
+            display: inline-block;
+            overflow: hidden;
+        }
+        .form_toggle-item {
+            float: left;
+            display: inline-block;
+        }
+        .form_toggle-item input[type=radio] {
+            display: none;
+        }
+        .form_toggle-item label {
+            display: inline-block;
+            padding: 0px 15px;
+            line-height: 34px;
+            border: 1px solid #999;
+            border-right: none;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .form_toggle .item-1 label {
+            border-radius: 6px 0 0 6px;
+        }
+        .form_toggle .item-2 label {
+            border-radius: 0 6px 6px 0;
+            border-right: 1px solid #999;
+        }
+
+        /* Checked */
+        .form_toggle .item-1 input[type=radio]:checked + label {
+            background: #ffc5c5;
+        }
+        .form_toggle .item-2 input[type=radio]:checked + label {
+            background: #bbffbb;
+        }
     </style>
 
 
@@ -169,8 +206,8 @@
             aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search"
-           aria-label="Search">
+<!--    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search"-->
+<!--           aria-label="Search">-->
     <div class="navbar-nav">
         <div class="nav-item text-nowrap">
             <a class="nav-link px-3" href="javascript: document.logoutForm.submit()">Выйти</a>
@@ -228,7 +265,22 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2" th:text="${dashboardParam}">Dashboard</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
-                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
+
+                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle"
+                            id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"
+                            th:text="${isHidden}? 'Активно':'Не активно'">
+                        Активность
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" type="button"
+                               th:href="'/dash/updateHiddenDashboardParam/'+ ${dashboardParamId}+'/1'">Активно</a>
+                        </li>
+                        <li><a class="dropdown-item" type="button"
+                               th:href="'/dash/updateHiddenDashboardParam/'+ ${dashboardParamId}+'/2'">Не активно</a>
+                        </li>
+                    </ul>
+
+                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle"
                             id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -251,7 +303,7 @@
                         <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/4/'+${dashboardParamId}">Область
                             с регрессом</a></li>
                     </ul>
-                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle"
                             id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
