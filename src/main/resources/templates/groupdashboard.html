@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <script src="/color-modes.js"></script>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,6 +10,43 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/dashboard/">
 
     <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="/assets/fonts/tabler-icons.min.css">
+    <link rel="stylesheet" href="/assets/fonts/feather.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome.css">
+    <link rel="stylesheet" href="/assets/fonts/material.css">
+    <link rel="stylesheet" href="/assets/fonts/cryptofont.css">
+
+    <link rel="stylesheet" href="/assets/css/style.css" id="main-style-link">
+
+    <link rel="stylesheet" href="/dashboard.css">
+    <link rel="stylesheet" href="/css/dashboards.css">
+    <link rel="stylesheet" href="/code/css/highcharts.css">
+    <script src="/color-modes.js"></script>
+
+    <script src="https://code.highcharts.com/dashboards/dashboards.js"></script>
+    <script src="https://code.highcharts.com/dashboards/modules/dashboards-plugin.js"></script>
+
+    <script src="/code/highcharts.js"></script>
+    <script src="/code/highcharts-3d.js"></script>
+    <script src="/code/modules/exporting.js"></script>
+    <script src="/code/modules/export-data.js"></script>
+    <script src="/code/modules/accessibility.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="/js/groupparamscript.js"></script>
+
+    <script src="/assets/js/plugins/popper.min.js"></script>
+    <script src="/assets/js/plugins/simplebar.min.js"></script>
+    <script src="/assets/js/plugins/bootstrap.min.js"></script>
+    <script src="/assets/js/plugins/feather.min.js"></script>
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/pcoded.js"></script>
+    <script src="/assets/js/plugins/apexcharts.min.js"></script>
+    <script src="/assets/js/pages/dashboard-sale.js"></script>
+    <script src="/assets/js/plugins/clipboard.min.js"></script>
+
 
     <style>
         .bd-placeholder-img {
@@ -85,11 +121,61 @@
         .bd-mode-toggle {
             z-index: 1500;
         }
+
+        .card {
+            white-space: nowrap;
+            page-break-inside: avoid;
+            break-inside: avoid;
+
+
+        }
+
+        .card-content {
+            white-space: normal;
+            vertical-align: top;
+            padding: 5px 5px 5px;
+        }
+
+        .card-form {
+            column-count: 2;
+            padding: 2px;
+            /*background: #f8f9fa;*/
+        }
+
+        @media (max-width: 898px) {
+            .card-form {
+                column-count: auto;
+            }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 0.5rem;
+        }
+        .grid>div {
+            /*padding: 0.5rem;*/
+            border-radius: 0.5rem;
+        }
+
+        }
+        @media (max-width: 990px) {
+            .grid{
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .material-icons-two-tone {
+            background-color: var(--bs-body-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            vertical-align: text-bottom;
+        }
+
     </style>
 
-
     <!-- Custom styles for this template -->
-    <link href="/dashboard.css" rel="stylesheet">
+
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -169,7 +255,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder=""
-           aria-label="Search">
+           aria-label="">
     <div class="navbar-nav">
         <div class="nav-item text-nowrap">
             <a class="nav-link px-3" href="javascript: document.logoutForm.submit()">Выйти</a>
@@ -186,7 +272,7 @@
             <div class="position-sticky pt-3 sidebar-sticky">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link" href="/dash/dashboardV1">
+                        <a class="nav-link" aria-current="page" href="/dash/dashboardV1">
                             <span data-feather="home" class="align-text-bottom"></span>
                             <b> Dashboard </b>
                         </a>
@@ -208,9 +294,10 @@
                     </li>
                     <li class="nav-item">
                         <div th:each="grouppar : ${groupParams}">
-                            <a class="nav-link" th:href="'/dash/dashboard/'+${grouppar.id}" th:text="${grouppar.groupName}">
+                            <a th:class="${grouppar.id==groupParamId}? 'nav-link active':'nav-link'"
+                            th:href="'/dash/groupdashboard/'+${grouppar.id}" th:text="${grouppar.groupName}">
                                 <span data-feather="file" class="align-text-bottom"></span>
-                                Параметры
+                                Группа параметров
                             </a>
                         </div>
                     </li>
@@ -222,8 +309,8 @@
                         </a>
                     </li>
                     <li class="nav-item" th:hidden="${!isAdmin}">
-                        <a class="nav-link active" aria-current="page" href="#">
-                            <span data-feather="home" class="align-text-bottom"></span>
+                        <a class="nav-link" href="/ftp/ftpsettingList">
+                            <span data-feather="layers" class="align-text-bottom"></span>
                             Настройки FTP
                         </a>
                     </li>
@@ -234,55 +321,118 @@
                         </a>
                     </li>
                 </ul>
-
             </div>
         </nav>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <h2>Список настроек доступа к FTP серверу</h2><br>
-            <div class="table-responsive">
-                <div class="mycol">
-                    <th class="table-responsive">
-                        <table class="table table-striped table-sm">
-                            <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Редактирование</th>
-                                <th scope="col">Параметр</th>
-                                <th scope="col">Host</th>
-                                <th scope="col">Port</th>
-                                <th scope="col">Filename</th>
-                                <th scope="col">TimeTask</th>
-                                <th scope="col">Active</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <div class="mycol">
-                                <tr th:each="setting : ${settings}">
-                                    <th th:text="${setting.id}">id</th>
-                                    <th><a th:href="'/ftp/ftpsettingEdit/'+${setting.id}">Редактировать</a></th>
-                                    <th th:text="${setting.dashboardParam.name}">name</th>
-                                    <th th:text="${setting.host}">host</th>
-                                    <th th:text="${setting.port}">port</th>
-                                    <th th:text="${setting.filename}">filename</th>
-                                    <th th:text="${setting.timeTask}">tametask</th>
-                                    <th th:text="${setting.active}? 'Активен' :'Не активен'">YES</th>
-                                </tr>
-                            </div>
-                            </tbody>
-                        </table>
-                        <br>
-                        <div class="mycol">
-                            <form action="/ftp/ftpsettingNew" method="get">
-                                <input type="hidden" name="_csrf" value="${_csrf.token}">
-                                <button class="btn btn-primary d-inline-flex align-items-center" type="submit">Создать
-                                    новое соединение
-                                </button>
-                            </form>
-                        </div>
-                    </th>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" th:text="${groupParamName}">Dashboard</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+
+                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle"
+                            id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"
+                            th:text="${isHidden}? 'Активно':'Не активно'">
+                        Активность
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" type="button"
+                               th:href="'/dash/updateHiddenGroupParam/'+ ${groupParamId}+'/1'">Активно</a>
+                        </li>
+                        <li><a class="dropdown-item" type="button"
+                               th:href="'/dash/updateHiddenGroupParam/'+ ${groupParamId}+'/2'">Не активно</a>
+                        </li>
+                    </ul>
+
+                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle"
+                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="feather feather-calendar" aria-hidden="true">
+                            <line x1="13" y1="16" x2="21" y2="5"></line>
+                            <line x1="13" y1="6" x2="13" y2="16"></line>
+                            <line x1="1" y1="19" x2="13" y2="6"></line>
+                            <line x1="1" y1="20" x2="1" y2="1"></line>
+                            <line x1="1" y1="20" x2="21" y2="20"></line>
+                        </svg>
+                        <span th:text="${typeline_select}">Диаграмма</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/grouptypeLine/1/'+${groupParamId}">Линия</a>
+                        </li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/grouptypeLine/2/'+${groupParamId}">Гистограмм</a>
+                        </li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/grouptypeLine/3/'+${groupParamId}">Гисторамма 3D</a>
+                        </li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/grouptypeLine/4/'+${groupParamId}">Область</a>
+                        </li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/grouptypeLine/5/'+${groupParamId}">Область
+                            с регрессом</a></li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/grouptypeLine/6/'+${groupParamId}">Текст</a>
+                        </li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/grouptypeLine/7/'+${groupParamId}">Круг</a>
+                        </li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/grouptypeLine/8/'+${groupParamId}">Кольцо 3D</a>
+                        </li>
+                    </ul>
+                    <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle"
+                            id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="feather feather-calendar" aria-hidden="true">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span th:text="${period_select}">Период неделя</span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/groupdashboard/1/'+${groupParamId}">Период
+                            неделя</a></li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/groupdashboard/2/'+${groupParamId}">Период
+                            месяц</a></li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/groupdashboard/3/'+${groupParamId}">Период
+                            квартал</a></li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/groupdashboard/4/'+${groupParamId}">Период
+                            год</a></li>
+                    </ul>
                 </div>
             </div>
+
+            <!--   __________________________________________________________________________________________________-->
+
+            <div>
+                <div class="my-4 w-100" id="container" width="900" height="380"></div>
+            </div>
+
+            <script th:inline="javascript">
+                myFunction3([[${groupParamId}]],[[${periodValue}]],[[${typeline_select}]],[[${groupParamName}]]);
+            </script>
+
+
+<!--            <h2>Таблица показателей</h2>-->
+<!--            <div class="table-responsive">-->
+<!--                <table class="table table-striped table-sm" id="tableParam">-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th scope="col">#</th>-->
+<!--                        <th scope="col">Дата</th>-->
+<!--                        <th scope="col" th:text="${groupParamName}">Значение</th>-->
+<!--                        <th scope="col">Динамика</th>-->
+<!--                        <th scope="col">Динамика в %</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr th:each="p, iter:${parametrTable}">-->
+<!--                        <td th:text="${iter.count}">1,000</td>-->
+<!--                        <td th:text="${p.date}">random</td>-->
+<!--                        <td th:text="${p.value}">data</td>-->
+<!--                        <td th:text="${p.valueDinamic}">placeholder</td>-->
+<!--                        <td th:text="${p.valueDinamicPercent}">text</td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
         </main>
     </div>
 </div>
@@ -290,12 +440,5 @@
 
 <script src="/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
-        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"
-        integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG"
-        crossorigin="anonymous"></script>
-<script src="dashboard.js"></script>
 </body>
 </html>

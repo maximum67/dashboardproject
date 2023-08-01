@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="en" data-bs-theme="auto" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <script src="/color-modes.js"></script>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -90,8 +89,6 @@
             white-space: nowrap;
             page-break-inside: avoid;
             break-inside: avoid;
-
-
         }
 
         .card-content {
@@ -115,22 +112,54 @@
         .grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-gap: 1rem;
+            grid-gap: 0.5rem;
         }
         .grid>div {
             /*padding: 0.5rem;*/
             border-radius: 0.5rem;
         }
-        @media (max-width: 990px) {
+
+        /*@media (max-width: 1450px) {*/
+        /*    .grid{*/
+        /*        grid-template-columns: 1fr 1fr;*/
+        /*    }*/
+        /*}*/
+        @media (max-width: 901px) {
             .grid{
                 grid-template-columns: 1fr;
             }
         }
+
+        .material-icons-two-tone {
+            background-color: var(--bs-body-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            vertical-align: text-bottom;
+        }
     </style>
+    <link rel="stylesheet" href="/assets/fonts/tabler-icons.min.css">
+    <link rel="stylesheet" href="/assets/fonts/feather.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome.css">
+    <link rel="stylesheet" href="/assets/fonts/material.css">
+    <link rel="stylesheet" href="/assets/css/style.css" id="main-style-link">
 
-
-    <!-- Custom styles for this template -->
     <link href="/dashboard.css" rel="stylesheet">
+<!--    <link href="/css/dashboards.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="/code/css/highcharts.css">
+
+    <script src="https://code.highcharts.com/dashboards/dashboards.js"></script>
+    <script src="https://code.highcharts.com/dashboards/modules/dashboards-plugin.js"></script>
+    <script src="/code/highcharts.js"></script>
+    <script src="/code/highcharts-3d.js"></script>
+    <script src="/code/modules/exporting.js"></script>
+    <script src="/code/modules/export-data.js"></script>
+    <script src="/code/modules/accessibility.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="/js/dashboardV1script.js"></script>
+    <script src="/js/groupparamV1script.js"></script>
+
+
 
 </head>
 <body>
@@ -210,8 +239,8 @@
             aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-<!--    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search"-->
-<!--           aria-label="Search">-->
+    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder=""
+           aria-label="">
     <div class="navbar-nav">
         <div class="nav-item text-nowrap">
             <a class="nav-link px-3" href="javascript: document.logoutForm.submit()">Выйти</a>
@@ -230,7 +259,7 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/dash/dashboardV1">
                             <span data-feather="home" class="align-text-bottom"></span>
-                            Dashboard
+                            <b> Dashboard </b>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -242,6 +271,21 @@
                         </div>
                     </li>
                     <hr>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dash/groupdashboardV1">
+                            <span data-feather="home" class="align-text-bottom"></span>
+                            <b>Dashboard group</b>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <div th:each="grouppar : ${groupParams}">
+                            <a class="nav-link" th:href="'/dash/groupdashboard/'+${grouppar.id}" th:text="${grouppar.groupName}">
+                                <span data-feather="file" class="align-text-bottom"></span>
+                                Группа параметров
+                            </a>
+                        </div>
+                    </li>
+                    <hr>
                     <li class="nav-item" th:hidden="${!isAdmin}">
                         <a class="nav-link" href="/dash/dashboardparamList">
                             <span data-feather="bar-chart-2" class="align-text-bottom"></span>
@@ -249,7 +293,7 @@
                         </a>
                     </li>
                     <li class="nav-item" th:hidden="${!isAdmin}">
-                        <a class="nav-link" href="/dash/ftpsettingList">
+                        <a class="nav-link" href="/ftp/ftpsettingList">
                             <span data-feather="layers" class="align-text-bottom"></span>
                             Настройки FTP
                         </a>
@@ -269,227 +313,68 @@
                 <h1 class="h2">Dashboard</h1>
             </div>
             <!--      _______________________________________________________________________________________________________-->
-
-
-            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
-
-<!--            <div class="card-form">-->
             <div class="grid">
-                <div th:each="par, iterStat : ${paramList}" class="card">
-
-<!--                    <div class="card-content">-->
+                <div th:each="par1 : ${groupParamList}">
+                    <!--                    <div class="card-content">-->
                     <div>
-                        <canvas th:id="'myChart'+${par.id}" width="900" height="380"></canvas>
-                        <br>
+                        <div th:id="'containergroup'+${par1.id}"  width="900" height="380" class="card"></div>
                     </div>
 
-                    <script type="text/javascript" th:inline="javascript">
+                    <script th:inline="javascript">
+
+                        for (let a = 1; a < 2; a++) {
+                            let typeLine1 = "";
+                            let periodValue1 = 7;
+                            axios.get('/api/dashboard/V9/' + [[${par1.id}]])
+                                .then((response) => {
+                                    typeLine1 = response.data;
+                                    axios.get('/api/dashboard/V8/' + [[${par1.id}]])
+                                        .then((response) => {
+                                            periodValue1 = response.data;
+                                            myFunction2([[${par1.id}]], periodValue1, typeLine1, [[${par1.groupName}]]);
+                                        });
+                                });
+                        }
+                    </script>
+                </div>
+<!--            </div><br>-->
+
+            <!--            <div class="card-form">-->
+<!--            <div class="grid">-->
+                <div th:each="par : ${paramList}">
+
+                    <!--                    <div class="card-content">-->
+                    <div>
+                        <div th:id="'container'+${par.id}"  width="900" height="380" class="card" ></div>
+                    </div>
+
+
+
+                    <script th:inline="javascript">
 
                         for (let a = 1; a < 2; a++) {
                             let typeLine = "";
+                            let periodValue = 7;
                             axios.get('/api/dashboard/V4/' + [[${par.id}]])
                                 .then((response) => {
                                     typeLine = response.data;
-
-                                    let colors = ['#F0F4C3', '#BDBDBD', '#8BC34A', '#CDDC39', '#AFB42B', '#B3E5FC', '#F5F5F5', '#DCEDC8', '#03A9F4', '#FFF9C4'];
-                                    let colorsBorder = ['#303F9F', '#00796B', '#3F51B5', '#5D4037', '#607D8B', '#757575', '#536DFE', '#336600', '#795548', '#388E3C'];
-                                    let color = colors[Math.ceil(Math.random() * 10)];
-                                    let colorBorder = colorsBorder[Math.ceil(Math.random() * 10)];
-                                    // Получение контекста для рисования
-                                    // Функции
-                                    if (typeLine === "Область") {
-                                        const createAreaChart = (xData, yData) => {
-                                            let data = {
-                                                labels: xData,
-                                                datasets: [{
-                                                    label: /*[[${par.name}]]*/ 'Показатель',
-                                                    data: yData,
-                                                    pointStyle: 'star',
-                                                    pointRadius: 3,
-                                                    fill: {
-                                                        target: 'origin',
-                                                        above: color
-                                                    },
-                                                    borderWidth: 1,
-                                                    borderColor: colorBorder
-                                                }]
-                                            }
-                                            let chart = new Chart(document.querySelector('#myChart' + [[${par.id}]]).getContext('2d'),
-                                                {type: 'line', data: data});
-                                        }
-                                        // Получение данных с сервера
-                                        let periodValue = 7;
-                                        axios.get('/api/dashboard/V3/' + [[${par.id}]])
-                                            .then((response) => {
-                                                periodValue = response.data;
-                                                axios.get('/api/dashboard/V2/' + [[${par.id}]] + '/' + periodValue)
-                                                    .then((response) => {
-                                                        let data = response.data;
-                                                        let xData = [];
-                                                        let yData = [];
-                                                        for (let i = 0; i < data.length; i++) {
-                                                            xData.push(data[i].date);
-                                                            yData.push(data[i].value);
-                                                        }
-                                                        createAreaChart(xData, yData);
-                                                    });
-                                            });
-
-                                    } else if (typeLine === "Гистограмма") {
-                                        // _____________________________________________________________________________________________
-                                        const createBarChart = (xData, yData) => {
-                                            let data = {
-                                                labels: xData,
-                                                datasets: [{
-                                                    label: /*[[${par.name}]]*/ 'Показатель',
-                                                    data: yData,
-                                                    backgroundColor: color,
-                                                    borderColor: colorBorder,
-                                                    borderWidth: 2
-                                                }]
-                                            }
-                                            let chart = new Chart(document.querySelector('#myChart' + [[${par.id}]]).getContext('2d'),
-                                                {type: 'bar', data: data});
-                                        }
-                                        // Получение данных с сервера
-                                        let periodValue = 7;
-                                        axios.get('/api/dashboard/V3/' + [[${par.id}]])
-                                            .then((response) => {
-                                                periodValue = response.data;
-                                                axios.get('/api/dashboard/V2/' + [[${par.id}]] + '/' + periodValue)
-                                                    .then((response) => {
-                                                        let data = response.data;
-                                                        let xData = [];
-                                                        let yData = [];
-                                                        for (let i = 0; i < data.length; i++) {
-                                                            xData.push(data[i].date);
-                                                            yData.push(data[i].value);
-                                                        }
-                                                        createBarChart(xData, yData);
-                                                    });
-                                            });
-                                    } else if (typeLine === "Линия") {
-                                        const createLineChart = (xData, yData) => {
-                                            let data = {
-                                                labels: xData,
-                                                datasets: [{
-                                                    label: /*[[${par.name}]]*/ 'Показатель',
-                                                    data: yData,
-                                                    pointStyle: 'crossRot',
-                                                    pointRadius: 3,
-                                                    fill: false,
-                                                    borderColor: colorBorder,
-                                                    borderWidth: 2
-                                                }]
-                                            }
-                                            let chart = new Chart(document.querySelector('#myChart' + [[${par.id}]]).getContext('2d'),
-                                                {type: 'line', data: data});
-                                        }
-                                        // Получение данных с сервера
-                                        let periodValue = 7;
-                                        axios.get('/api/dashboard/V3/' + [[${par.id}]])
-                                            .then((response) => {
-                                                periodValue = response.data;
-                                                axios.get('/api/dashboard/V2/' + [[${par.id}]] + '/' + periodValue)
-                                                    .then((response) => {
-                                                        let data = response.data;
-                                                        let xData = [];
-                                                        let yData = [];
-                                                        for (let i = 0; i < data.length; i++) {
-                                                            xData.push(data[i].date);
-                                                            yData.push(data[i].value);
-                                                        }
-                                                        createLineChart(xData, yData);
-                                                    });
-                                            });
-                                    } else {
-                                        const createAreaLineChart = (xData, yData, yData1) => {
-                                            let data = {
-                                                labels: xData,
-                                                datasets: [{
-                                                    type: 'line',
-                                                    label: /*[[${par.name}]]*/ 'Показатель',
-                                                    data: yData,
-                                                    pointStyle: 'star',
-                                                    pointRadius: 3,
-                                                    fill: {
-                                                        target: 'origin',
-                                                        above: color
-                                                    },
-                                                    borderWidth: 1,
-                                                    borderColor: colorBorder,
-                                                    order: 2
-                                                }, {
-                                                    type: 'line',
-                                                    label: 'Регрессия',
-                                                    data: yData1,
-                                                    pointStyle: false,
-                                                    fill: false,
-                                                    borderWidth: 2,
-                                                    order: 1,
-                                                    borderColor: '#E64A19'
-                                                }]
-                                            }
-                                            let chart = new Chart(document.querySelector('#myChart' + [[${par.id}]]).getContext('2d'), {data: data});
-                                        }
-                                        // Получение данных с сервера
-                                        let periodValue = 7;
-                                        axios.get('/api/dashboard/V3/' + [[${par.id}]])
-                                            .then((response) => {
-                                                periodValue = response.data;
-                                                axios.get('/api/dashboard/V2/' + [[${par.id}]] + '/' + periodValue)
-                                                    .then((response) => {
-                                                        let data = response.data;
-                                                        let xData = [];
-                                                        let yData = [];
-                                                        let yData1 = [];
-                                                        let sumxx = 0;
-                                                        let sumx = 0;
-                                                        let sumxy = 0;
-                                                        let sumy = 0;
-                                                        for (let i = 0; i < data.length; i++) {
-                                                            xData.push(data[i].date);
-                                                            yData.push(data[i].value);
-                                                            sumx = sumx + i;
-                                                            sumxx = sumxx + i * i;
-                                                            sumy = sumy + Number(data[i].value);
-                                                            sumxy = sumxy + Number(data[i].value) * i;
-                                                        }
-                                                        // Вычисляем формулу прямой регресса y=a+b*x________________
-                                                        let a = (sumy * sumxx - sumx * sumxy) / (data.length * sumxx - sumx * sumx);
-                                                        let b = (data.length * sumxy - sumx * sumy) / (data.length * sumxx - sumx * sumx);
-                                                        //__________________________________________________________
-                                                        for (let i = 0; i < data.length; i++) {
-                                                            yData1.push(a + b * i);
-                                                        }
-
-                                                        createAreaLineChart(xData, yData, yData1);
-
-                                                    });
-                                            });
-                                    }
+                                    axios.get('/api/dashboard/V3/' + [[${par.id}]])
+                                        .then((response) => {
+                                            periodValue = response.data;
+                                            myFunctionV1([[${par.id}]], periodValue, typeLine, [[${par.name}]]);
+                                        });
                                 });
                         }
                     </script>
                 </div>
             </div>
 
-
         </main>
     </div>
 </div>
 
-
+<script src="/color-modes.js"></script>
 <script src="/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
-        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"
-        integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG"
-        crossorigin="anonymous"></script>
-<script src="dashboard.js"></script>
 </body>
 </html>

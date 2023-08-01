@@ -3,14 +3,15 @@ package com.example.dashboardproject.controller;
 import com.example.dashboardproject.models.*;
 import com.example.dashboardproject.services.*;
 import lombok.RequiredArgsConstructor;
+
+
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.time.LocalTime;
 import java.util.Base64;
-import java.util.HashMap;
+
 
 
 @Controller
@@ -18,13 +19,16 @@ import java.util.HashMap;
 @RequestMapping("/dash/")
 public class DashboardController {
 
-    private final FtpService ftpService;
     private final V1service v1service;
     private final UserService userService;
     private final DashboardParamService dashboardParamService;
     private final DashboardPeriodService dashboardPeriodService;
     private final DashboardTypeLineService dashboardTypeLineService;
     private final HiddenSettingService hiddenSettingService;
+    private final GroupParamService groupParamService;
+    private final GroupPeriodService groupPeriodService;
+    private final GroupTypeLineService groupTypeLineService;
+    private final HiddenSettingGroupService hiddenSettingGroupService;
     Base64.Decoder decoder = Base64.getDecoder();
     Base64.Encoder encoder = Base64.getEncoder();
 
@@ -34,30 +38,120 @@ public class DashboardController {
         model.addAttribute("params", dashboardParamService.list());
         model.addAttribute("paramList", dashboardParamService.findAllByHidden());
         model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
+        model.addAttribute("groupParams", groupParamService.list());
+        model.addAttribute("groupParamList", groupParamService.findAllByHidden());
         if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
             return "dashboardV1";
         } else {
             return "dashboardDemo";
         }
-
+    }
+    @GetMapping("/groupdashboardV1")
+    public String getGroupDashboard(Model model) {
+        model.addAttribute("title", "Groupdashboard");
+        model.addAttribute("params", dashboardParamService.list());
+        model.addAttribute("paramList", dashboardParamService.findAllByHidden());
+        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
+        model.addAttribute("groupParams", groupParamService.list());
+        model.addAttribute("groupParamList", groupParamService.findAllByHidden());
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "groupdashboardV1";
+        } else {
+            return "dashboardDemo";
+        }
     }
 
     @GetMapping("/dashboard")
     public String getDashboardTest(Model model) {
         model.addAttribute("title", "Dashboard");
         model.addAttribute("params", dashboardParamService.list());
+        model.addAttribute("groupParams", groupParamService.list());
         model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
         model.addAttribute("period_select", dashboardPeriodService.getPeriodByUser());
         model.addAttribute("typeline_select", dashboardTypeLineService.getTypeLineByUser());
-        return "dashboard";
+        model.addAttribute("groupParamList", groupParamService.findAllByHidden());
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "dashboard";
+        } else {
+            return "dashboardDemo";
+        }
+    }
+
+    @GetMapping("/groupdashboard")
+    public String getGroupDashboardTest(Model model) {
+        model.addAttribute("title", "GroupDashboard");
+        model.addAttribute("params", dashboardParamService.list());
+        model.addAttribute("groupParams", groupParamService.list());
+        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
+        model.addAttribute("period_select", groupPeriodService.getPeriodByUser());
+        model.addAttribute("typeline_select", groupTypeLineService.getTypeLineByUser());
+        model.addAttribute("groupParamList", groupParamService.findAllByHidden());
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "groupdashboard";
+        } else {
+            return "dashboardDemo";
+        }
+    }
+
+
+    @GetMapping("/groupdashboard/{groupParam}")
+    public String getGroupDashboard(@PathVariable ("groupParam") GroupParam groupParam, Model model) {
+        model.addAttribute("title", "groupdashboard");
+        model.addAttribute("params", dashboardParamService.list());
+        model.addAttribute("groupParams", groupParamService.list());
+        model.addAttribute("groupParamId", groupParam.getId());
+        model.addAttribute("groupParamName", groupParam.getGroupName());
+        model.addAttribute("groupParamList", groupParamService.findAllByHidden());
+        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
+        String str = "";
+        Long periodValue = 7L;
+        switch (groupPeriodService.getPeriodByUserAndParam(groupParam).getDashboardPeriod()) {
+            case PERIOD_MONTH:
+                str = "Период месяц";
+                periodValue = 30L;
+                break;
+            case PERIOD_YEAR:
+                str = "Период год";
+                periodValue = 365L;
+                break;
+            case PERIOD_QUARTER:
+                str = "Период квартал";
+                periodValue = 90L;
+                break;
+            default:
+                str = "Период неделя";
+        };
+        String str2 = "";
+        switch (groupTypeLineService.getTypeLineByUserAndParam(groupParam).getTypeLine()) {
+            case BAR -> str2 = "Гистограмма";
+            case BAR3D -> str2 = "Гистограмма 3D";
+            case TEXT -> str2 = "Текст";
+            case PIE -> str2 = "Круг";
+            case DONUT3D-> str2 = "Кольцо 3D";
+            case LINE_AREA -> str2 = "Область";
+            case LINE_REGRESS -> str2 = "Область с регрессом";
+            default -> str2 = "Линия";
+        };
+        model.addAttribute("period_select", str);
+        model.addAttribute("typeline_select", str2);
+        model.addAttribute("periodValue", periodValue);
+//        model.addAttribute("parametrTable", v1service.getParametrTable(groupParam.getDashboardParams().get(4), Integer.parseInt(String.valueOf(periodValue))));
+        model.addAttribute("isHidden", hiddenSettingGroupService.getHiddenSettingByUserAndParam(groupParam).getIsHidden());
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "groupdashboard";
+        } else {
+            return "dashboardDemo";
+        }
     }
 
     @GetMapping("/dashboard/{dashboardParam}")
     public String getDashboardV(@PathVariable("dashboardParam") DashboardParam dashboardParam, Model model) {
         model.addAttribute("title", "Dashboard");
         model.addAttribute("params", dashboardParamService.list());
+        model.addAttribute("groupParams", groupParamService.list());
         model.addAttribute("dashboardParam", dashboardParam.getName());
         model.addAttribute("dashboardParamId", dashboardParam.getId());
+        model.addAttribute("groupParamList", groupParamService.findAllByHidden());
         model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
         String str = "";
         Long periodValue = 7L;
@@ -80,6 +174,10 @@ public class DashboardController {
         String str2 = "";
         switch (dashboardTypeLineService.getTypeLineByUserAndParam(dashboardParam).getTypeLine()) {
             case BAR -> str2 = "Гистограмма";
+            case BAR3D -> str2 = "Гистограмма 3D";
+            case TEXT -> str2 = "Текст";
+            case PIE -> str2 = "Круг";
+            case DONUT3D-> str2 = "Кольцо 3D";
             case LINE_AREA -> str2 = "Область";
             case LINE_REGRESS -> str2 = "Область с регрессом";
             default -> str2 = "Линия";
@@ -89,7 +187,11 @@ public class DashboardController {
         model.addAttribute("periodValue", periodValue);
         model.addAttribute("parametrTable", v1service.getParametrTable(dashboardParam, Integer.parseInt(String.valueOf(periodValue))));
         model.addAttribute("isHidden", hiddenSettingService.getHiddenSettingByUserAndParam(dashboardParam).getIsHidden());
-        return "dashboard";
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "dashboard";
+        } else {
+            return "dashboardDemo";
+        }
     }
     @GetMapping("/updateHiddenDashboardParam/{dashboardParam}/{n}")
     public String updateHiddenDashboardParam(@PathVariable ("dashboardParam") DashboardParam dashboardParam,
@@ -103,112 +205,32 @@ public class DashboardController {
             HiddenSetting hiddenSetting2 = hiddenSettingService.getHiddenSettingByUserAndParam(dashboardParam);
             hiddenSettingService.updateHiddenSetting(hiddenSetting2);
         }
-        return "redirect:/dash/dashboard/"+dashboardParam.getId();
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "redirect:/dash/dashboard/"+dashboardParam.getId();
+        } else {
+            return "dashboardDemo";
+        }
+    }
+
+    @GetMapping("/updateHiddenGroupParam/{groupParam}/{n}")
+    public String updateHiddenGroupParam(@PathVariable ("groupParam") GroupParam groupParam,
+                                             @PathVariable ("n") Long n){
+        if (n==1) {
+            hiddenSettingGroupService.getHiddenSettingByUserAndParam(groupParam).setIsHidden(true);
+            HiddenSettingGroup hiddenSettingGroup = hiddenSettingGroupService.getHiddenSettingByUserAndParam(groupParam);
+            hiddenSettingGroupService.updateHiddenSettingGroup(hiddenSettingGroup);
+        }else {
+            hiddenSettingGroupService.getHiddenSettingByUserAndParam(groupParam).setIsHidden(false);
+            HiddenSettingGroup hiddenSettingGroup = hiddenSettingGroupService.getHiddenSettingByUserAndParam(groupParam);
+            hiddenSettingGroupService.updateHiddenSettingGroup(hiddenSettingGroup);
+        }
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "redirect:/dash/groupdashboard/"+groupParam.getId();
+        } else {
+            return "dashboardDemo";
+        }
     }
     //______________________________________________________________________________________________________________
-
-    @GetMapping("/ftpsettingList")
-    public String getFtpSettingList(Model model) {
-        model.addAttribute("title", "ftpsettingList");
-        model.addAttribute("settings", ftpService.list());
-        model.addAttribute("params", dashboardParamService.list());
-        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
-        return "ftpsettingList";
-    }
-
-    @GetMapping("/ftpsettingEdit/{ftpsetting}")
-    public String getFtpSettingEdit(@PathVariable("ftpsetting") FtpSetting ftpSetting, Model model) {
-        model.addAttribute("title", "ftpsettingEdit");
-        model.addAttribute("ftpsetting", ftpSetting);
-        model.addAttribute("password", new String(decoder.decode(ftpSetting.getPassword())));
-        model.addAttribute("dashboardparams", dashboardParamService.list());
-        model.addAttribute("dashparam", ftpSetting.getDashboardParam());
-        model.addAttribute("params", dashboardParamService.list());
-        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
-        return "ftpsettingEdit";
-    }
-
-    @PostMapping("/updateFtpsetting/{ftpsetting}")
-    public String updateFtpSetting(@RequestParam("login") String login, @RequestParam("host") String host,
-                                   @RequestParam("port") String port, @RequestParam("filename") String filename,
-                                   @RequestParam("password") String password, @RequestParam("timetask") LocalTime timeTask,
-                                   @RequestParam("dashboardparam") DashboardParam dashboardParam,
-                                   @RequestParam("trDate") Integer trDate, @RequestParam("thDate") Integer thDate,
-                                   @RequestParam("trValue") Integer trValue, @RequestParam("thValue") Integer thValue,
-                                   @RequestParam("active") boolean active, @PathVariable("ftpsetting") FtpSetting ftpSetting) {
-        ftpSetting.setLogin(login);
-        ftpSetting.setPassword(encoder.encodeToString(password.getBytes()));
-        ftpSetting.setHost(host);
-        ftpSetting.setPort(port);
-        ftpSetting.setFilename(filename);
-        ftpSetting.setTimeTask(timeTask);
-        ftpSetting.setDashboardParam(dashboardParam);
-        ftpSetting.setThDate(thDate);
-        ftpSetting.setTrDate(trDate);
-        ftpSetting.setTrValue(trValue);
-        ftpSetting.setThValue(thValue);
-        ftpService.activateFtpSetting(ftpSetting.getId(), active, v1service);
-        ftpService.updateFtpSetting(ftpSetting);
-        return "redirect:/dash/ftpsettingEdit/" + ftpSetting.getId();
-    }
-
-    @PostMapping("/checkFtp/{ftpsetting}")
-    public String checkFtp(@PathVariable("ftpsetting") FtpSetting ftpSetting, Model model) throws IOException {
-        FtpConnector ftpConnector = new FtpConnector();
-        HashMap<String, String> map = new HashMap<>();
-        map.put("host", ftpSetting.getHost());
-        map.put("port", ftpSetting.getPort());
-        map.put("login", ftpSetting.getLogin());
-        map.put("password", new String(decoder.decode(ftpSetting.getPassword())));
-        model.addAttribute("title", "ftpsettingEdit");
-        model.addAttribute("message", ftpConnector.checkConnection(map));
-        model.addAttribute("ftpsetting", ftpSetting);
-        model.addAttribute("password", new String(decoder.decode(ftpSetting.getPassword())));
-        model.addAttribute("dashboardparams", dashboardParamService.list());
-        model.addAttribute("dashparam", ftpSetting.getDashboardParam());
-        model.addAttribute("params", dashboardParamService.list());
-        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
-        return "ftpsettingEdit";
-    }
-
-    @GetMapping("/ftpsettingNew")
-    public String ftpsettingNew(Model model) {
-        model.addAttribute("title", "new ftpsetting");
-        model.addAttribute("dashboardparams", dashboardParamService.list());
-        model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
-        return "ftpsettingNew";
-    }
-
-    @PostMapping("/createNewSetting")
-    public String createNewSetting(@RequestParam("login") String login, @RequestParam("host") String host,
-                                   @RequestParam("port") String port, @RequestParam("filename") String filename,
-                                   @RequestParam("password") String password, @RequestParam("timetask") LocalTime timeTask,
-                                   @RequestParam("dashboardparam") DashboardParam dashboardParam,
-                                   @RequestParam("trDate") Integer trDate, @RequestParam("thDate") Integer thDate,
-                                   @RequestParam("trValue") Integer trValue, @RequestParam("thValue") Integer thValue,
-                                   @RequestParam("active") boolean active) {
-        FtpSetting ftpSetting = new FtpSetting();
-        ftpSetting.setLogin(login);
-        ftpSetting.setPassword(encoder.encodeToString(password.getBytes()));
-        ftpSetting.setHost(host);
-        ftpSetting.setPort(port);
-        ftpSetting.setFilename(filename);
-        ftpSetting.setTimeTask(timeTask);
-        ftpSetting.setActive(active);
-        ftpSetting.setDashboardParam(dashboardParam);
-        ftpSetting.setThDate(thDate);
-        ftpSetting.setTrDate(trDate);
-        ftpSetting.setTrValue(trValue);
-        ftpSetting.setThValue(thValue);
-        ftpService.updateFtpSetting(ftpSetting);
-        return "redirect:/dash/ftpsettingEdit/" + ftpSetting.getId();
-    }
-
-    @PostMapping("/deleteFtpsetting/{ftpsetting}")
-    public String deleteSetting(@PathVariable("ftpsetting") FtpSetting ftpSetting) {
-        ftpService.deleteFtpSetting(ftpSetting.getId());
-        return "redirect:/dash/ftpsettingList";
-    }
 
     //___________________________________________________________________________________________________________
     @GetMapping("/dashboardparamList")
@@ -216,47 +238,79 @@ public class DashboardController {
         model.addAttribute("title", "dashboardparamlist");
         model.addAttribute("dashboardParams", dashboardParamService.list());
         model.addAttribute("params", dashboardParamService.list());
+        model.addAttribute("groupParams", groupParamService.list());
         model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
-        return "dashboardparamList";
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "dashboardparamList";
+        } else {
+            return "dashboardDemo";
+        }
     }
 
     @GetMapping("/dashboardparamEdit/{dashboardparam}")
     public String getDashboardparamEdit(@PathVariable("dashboardparam") DashboardParam dashboardParam, Model model) {
-        model.addAttribute("title", "dashbordparam");
-        model.addAttribute("dashboardparam", dashboardParam);
+        model.addAttribute("title", "dashboardparam");
+        model.addAttribute("dashboardParam", dashboardParam);
         model.addAttribute("params", dashboardParamService.list());
+        model.addAttribute("groupParams", groupParamService.list());
         model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
-        return "dashboardparamEdit";
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "dashboardparamEdit";
+        } else {
+            return "dashboardDemo";
+        }
     }
 
     @PostMapping("/updateDashboardparam/{dashboardparam}")
     public String updateDashboardParam(@RequestParam("name") String name,
+                                      @RequestParam("icon") String icon,
                                       @PathVariable("dashboardparam") DashboardParam dashboardParam) {
         dashboardParam.setName(name);
+        dashboardParam.setIcon(icon);
         dashboardParamService.updateDashboardParam(dashboardParam);
-        return "redirect:/dash/dashboardparamList";
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "redirect:/dash/dashboardparamList";
+        } else {
+            return "dashboardDemo";
+        }
     }
 
     @PostMapping("/createNewDashboardparam")
-    public String createNewDashboardparam(@RequestParam("name") String name) {
+    public String createNewDashboardparam(@RequestParam("name") String name,
+                                          @RequestParam("icon") String icon) {
         DashboardParam dashboardParam = new DashboardParam();
         dashboardParam.setName(name);
+        dashboardParam.setIcon(icon);
         dashboardParamService.updateDashboardParam(dashboardParam);
-        return "redirect:/dash/dashboardparamList";
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "redirect:/dash/dashboardparamList";
+        } else {
+            return "dashboardDemo";
+        }
     }
 
     @GetMapping("/dashboardparamNew")
     public String dashboardparamNew(Model model) {
         model.addAttribute("title", "new dashboardparam");
         model.addAttribute("params", dashboardParamService.list());
+        model.addAttribute("groupParams", groupParamService.list());
         model.addAttribute("isAdmin", userService.getUserByPrincipal().isAdmin());
-        return "dashboardparamNew";
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "dashboardparamNew";
+        } else {
+            return "dashboardDemo";
+        }
     }
+
 
     @PostMapping("/deleteDashboardparam/{dashboardparam}")
     public String deleteDashboardparam(@PathVariable("dashboardparam") DashboardParam dashboardParam) {
         dashboardParamService.deleteDashboardParam(dashboardParam.getId());
-        return "redirect:/dash/dashboardparamList";
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "redirect:/dash/dashboardparamList";
+        } else {
+            return "dashboardDemo";
+        }
     }
     //___________________________________________________________________________________________________
 
@@ -277,7 +331,11 @@ public class DashboardController {
             periodSetting1.setDashboardPeriod(DashboardPeriod.PERIOD_WEEK);
         }
         dashboardPeriodService.updateDashboardPeriod(periodSetting1);
-        return "redirect:/dash/dashboardV1";
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "redirect:/dash/dashboardV1";
+        } else {
+            return "dashboardDemo";
+        }
     }
 
 
@@ -298,8 +356,35 @@ public class DashboardController {
             periodSetting.setDashboardPeriod(DashboardPeriod.PERIOD_WEEK);
         }
         dashboardPeriodService.updateDashboardPeriod(periodSetting);
-        return "redirect:/dash/dashboard/" + dashboardParam.getId();
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "redirect:/dash/dashboard/" + dashboardParam.getId();
+        } else {
+            return "dashboardDemo";
+        }
+    }
 
+    @GetMapping("/groupdashboard/{p}/{groupParamId}")
+    public String getPeriodSettingGroup(@PathVariable("p") Long p, @PathVariable("groupParamId") Long id) {
+        GroupParam groupParam = groupParamService.getById(id);
+        if (groupParam.getId() == 1000000000L) return "redirect:/dash/groupdashboard";
+        PeriodSettingGroup periodSettingGroup = groupPeriodService.getPeriodByUserAndParam(groupParam);
+        if (p == 1L) {
+            periodSettingGroup.setDashboardPeriod(DashboardPeriod.PERIOD_WEEK);
+        } else if (p == 2L) {
+            periodSettingGroup.setDashboardPeriod(DashboardPeriod.PERIOD_MONTH);
+        } else if (p == 3L) {
+            periodSettingGroup.setDashboardPeriod(DashboardPeriod.PERIOD_QUARTER);
+        } else if (p == 4L) {
+            periodSettingGroup.setDashboardPeriod(DashboardPeriod.PERIOD_YEAR);
+        } else {
+            periodSettingGroup.setDashboardPeriod(DashboardPeriod.PERIOD_WEEK);
+        }
+        groupPeriodService.updateGroupPeriod(periodSettingGroup);
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "redirect:/dash/groupdashboard/" + groupParam.getId();
+        } else {
+            return "dashboardDemo";
+        }
     }
 
     @GetMapping("/typeLine/{p}/{dashboardParamId}")
@@ -307,20 +392,59 @@ public class DashboardController {
         DashboardParam dashboardParam = dashboardParamService.getById(id);
         if (dashboardParam.getId() == 1000000000L) return "redirect:/dash/dashboard";
         LineSetting lineSetting = dashboardTypeLineService.getTypeLineByUserAndParam(dashboardParam);
-        if (p == 1L) {
-            lineSetting.setTypeLine(TypeLine.LINE);
+        if (p == 3L) {
+            lineSetting.setTypeLine(TypeLine.BAR3D);
+        } else if (p == 6L) {
+            lineSetting.setTypeLine(TypeLine.TEXT);
         } else if (p == 2L) {
             lineSetting.setTypeLine(TypeLine.BAR);
-        } else if (p == 3L) {
-            lineSetting.setTypeLine(TypeLine.LINE_AREA);
         } else if (p == 4L) {
+            lineSetting.setTypeLine(TypeLine.LINE_AREA);
+        } else if (p == 5L) {
             lineSetting.setTypeLine(TypeLine.LINE_REGRESS);
-        } else {
+        } else if (p == 7L) {
+            lineSetting.setTypeLine(TypeLine.PIE);
+        } else if (p == 8L) {
+            lineSetting.setTypeLine(TypeLine.DONUT3D);
+        }else {
             lineSetting.setTypeLine(TypeLine.LINE);
         }
         dashboardTypeLineService.updateDashboardTypeline(lineSetting);
-        return "redirect:/dash/dashboard/" + dashboardParam.getId();
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "redirect:/dash/dashboard/" + dashboardParam.getId();
+        } else {
+            return "dashboardDemo";
+        }
+    }
 
+    @GetMapping("/grouptypeLine/{p}/{groupParamId}")
+    public String getLineSettingGroup(@PathVariable("p") Long p, @PathVariable("groupParamId") Long id) {
+        GroupParam groupParam = groupParamService.getById(id);
+        if (groupParam.getId() == 1000000000L) return "redirect:/dash/groupdashboard";
+        LineSettingGroup lineSettingGroup = groupTypeLineService.getTypeLineByUserAndParam(groupParam);
+        if (p == 3L) {
+            lineSettingGroup.setTypeLine(TypeLine.BAR3D);
+        } else if (p == 6L) {
+            lineSettingGroup.setTypeLine(TypeLine.TEXT);
+        } else if (p == 2L) {
+            lineSettingGroup.setTypeLine(TypeLine.BAR);
+        } else if (p == 4L) {
+            lineSettingGroup.setTypeLine(TypeLine.LINE_AREA);
+        } else if (p == 5L) {
+            lineSettingGroup.setTypeLine(TypeLine.LINE_REGRESS);
+        } else if (p == 7L) {
+            lineSettingGroup.setTypeLine(TypeLine.PIE);
+        } else if (p == 8L) {
+                lineSettingGroup.setTypeLine(TypeLine.DONUT3D);
+        } else {
+            lineSettingGroup.setTypeLine(TypeLine.LINE);
+        }
+        groupTypeLineService.updateGroupTypeline(lineSettingGroup);
+        if (userService.getUserByPrincipal().isAdmin() || userService.getUserByPrincipal().isUser()) {
+            return "redirect:/dash/groupdashboard/" + groupParam.getId();
+        } else {
+            return "dashboardDemo";
+        }
     }
 }
 

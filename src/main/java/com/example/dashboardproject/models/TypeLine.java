@@ -1,5 +1,5 @@
 package com.example.dashboardproject.models;
 
 public enum TypeLine {
-    LINE, BAR, LINE_AREA, LINE_REGRESS;
+    LINE, BAR, BAR3D, LINE_AREA, LINE_REGRESS, TEXT, PIE, DONUT3D;
 }

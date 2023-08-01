@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -44,15 +46,23 @@ public class DashboardParamService {
     public List<DashboardParam> findAllByHidden(){
         List<DashboardParam> dashboardParams = dashboardParamRepository.findAll();
         List<DashboardParam> dashboardParamList = new ArrayList<>();
+        List<HiddenSetting> hiddenSettingsByUser = new ArrayList<>();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         for (DashboardParam dashboard: dashboardParams) {
-           List<HiddenSetting> hiddenSettings = dashboard.getHiddenSetting();
-            for (HiddenSetting hiddensetting: hiddenSettings) {
-                if (user.getId() == hiddensetting.getUser().getId() && hiddensetting.getIsHidden()) {
+            List<HiddenSetting> hiddenSettings = dashboard.getHiddenSetting();
+            for (HiddenSetting hiddensetting : hiddenSettings) {
+                if (Objects.equals(user.getId(), hiddensetting.getUser().getId()) && hiddensetting.getIsHidden()) {
                     dashboardParamList.add(dashboard);
+                }
+                if (Objects.equals(user.getId(), hiddensetting.getUser().getId())) {
+                    hiddenSettingsByUser.add(hiddensetting);
                 }
             }
         }
+                if (hiddenSettingsByUser.isEmpty()){
+                    dashboardParamList.addAll(dashboardParams);
+                }
+
             return dashboardParamList;
     }
 }

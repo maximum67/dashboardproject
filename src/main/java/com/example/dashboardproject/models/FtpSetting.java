@@ -1,12 +1,17 @@
 package com.example.dashboardproject.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+
 import java.time.LocalTime;
 
 @Entity
 @Table(name = "ftpstting")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class FtpSetting {
 
     @Id
@@ -47,7 +52,7 @@ public class FtpSetting {
     @Column(name = "thValue")
     private int thValue;
 
-    @OneToOne(cascade = CascadeType.REFRESH,
+    @ManyToOne(cascade = CascadeType.REFRESH,
             fetch = FetchType.LAZY)
     @JoinColumn
     private DashboardParam dashboardParam;

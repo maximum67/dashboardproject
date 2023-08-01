@@ -168,8 +168,8 @@
             aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-<!--    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search"-->
-<!--           aria-label="Search">-->
+    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder=""
+           aria-label="Search">
     <div class="navbar-nav">
         <div class="nav-item text-nowrap">
             <a class="nav-link px-3" href="javascript: document.logoutForm.submit()">Выйти</a>
@@ -188,12 +188,27 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/dash/dashboardV1">
                             <span data-feather="home" class="align-text-bottom"></span>
-                            Dashboard
+                            <b> Dashboard </b>
                         </a>
                     </li>
                     <li class="nav-item">
                         <div th:each="par : ${params}">
                             <a class="nav-link" th:href="'/dash/dashboard/'+${par.id}" th:text="${par.name}">
+                                <span data-feather="file" class="align-text-bottom"></span>
+                                Параметры
+                            </a>
+                        </div>
+                    </li>
+                    <hr>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dash/groupdashboardV1">
+                            <span data-feather="home" class="align-text-bottom"></span>
+                            <b>Dashboard group</b>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <div th:each="grouppar : ${groupParams}">
+                            <a class="nav-link" th:href="'/dash/dashboard/'+${grouppar.id}" th:text="${grouppar.groupName}">
                                 <span data-feather="file" class="align-text-bottom"></span>
                                 Параметры
                             </a>
@@ -207,7 +222,7 @@
                         </a>
                     </li>
                     <li class="nav-item" th:hidden="${!isAdmin}">
-                        <a class="nav-link active" aria-current="page" href="/dash/ftpsettingList">
+                        <a class="nav-link active" aria-current="page" href="/ftp/ftpsettingList">
                             <span data-feather="home" class="align-text-bottom"></span>
                             Настройки FTP
                         </a>
@@ -227,7 +242,7 @@
             <h2>Hастройки доступа к FTP серверу</h2>
 
             <div class="col-md">
-                <form class="form-control-sm" th:action="'/dash/createNewSetting'" method="post">
+                <form class="form-control-sm" th:action="'/ftp/createNewSetting'" method="post">
                     <div class="mycol">
                         <table>
                             <tr>

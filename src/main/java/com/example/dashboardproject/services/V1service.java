@@ -2,6 +2,7 @@ package com.example.dashboardproject.services;
 
 import com.example.dashboardproject.models.DashboardParam;
 import com.example.dashboardproject.models.DashboardV1;
+import com.example.dashboardproject.models.GroupParam;
 import com.example.dashboardproject.repositories.DashboardV1repository;
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +24,7 @@ public class V1service {
 
     public List<Map> listDashboardV1ByParam(DashboardParam dashboardParam) {
         List<Map> listDashboardV1 = new LinkedList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy");
         Sort sort = Sort.by("date").ascending();
         List<DashboardV1> dashboardV1s = dashboardV1repository.findAllByDashboardParam(dashboardParam, sort);
         for (DashboardV1 dashboardV1 : dashboardV1s) {
@@ -37,7 +38,7 @@ public class V1service {
 
     public List<Map> listDashboardV1ByParamPeriod(DashboardParam dashboardParam, Integer p) {
         List<Map> listDashboardV1 = new LinkedList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy");
         Sort sort = Sort.by("date").ascending();
         List<DashboardV1> dashboardV1s = dashboardV1repository.findAllByDashboardParam(dashboardParam, sort);
         for (DashboardV1 dashboardV1 : dashboardV1s) {
@@ -54,8 +55,8 @@ public class V1service {
     }
 
     public List<Map> getParametrTable(DashboardParam dashboardParam, Integer p) {
-        List<Map> listDashboardV1 = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        List<Map> listDashboardV1 = new LinkedList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy");
         Sort sort = Sort.by("date").ascending();
         List<DashboardV1> dashboardV1s = dashboardV1repository.findAllByDashboardParam(dashboardParam, sort);
         for (int i = dashboardV1s.size() - 1; i >= 0; i--) {
@@ -76,5 +77,29 @@ public class V1service {
         }
         return listDashboardV1;
     }
+
+    public List<List> listGroupParamByParamsAndPeriod(GroupParam groupParam, Integer p) {
+        List<List> listGroupParam = new LinkedList<>();
+        for (DashboardParam dashboardParam : groupParam.getDashboardParams()) {
+            List<Map> listDashboardV1 = new LinkedList<>();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yy");
+            Sort sort = Sort.by("date").ascending();
+            List<DashboardV1> dashboardV1s = dashboardV1repository.findAllByDashboardParam(dashboardParam, sort);
+            for (DashboardV1 dashboardV1 : dashboardV1s) {
+                Map<String, String> map = new HashMap<>();
+                map.put("date", formatter.format(dashboardV1.getDate()));
+                map.put("value", dashboardV1.getValue());
+                listDashboardV1.add(map);
+            }
+            int end = listDashboardV1.size();
+            if (p < listDashboardV1.size()) {
+                listGroupParam.add(listDashboardV1.subList(end - p, end));
+            }else {
+                listGroupParam.add(listDashboardV1);
+            }
+        }
+        return listGroupParam;
+    }
+
 }
 

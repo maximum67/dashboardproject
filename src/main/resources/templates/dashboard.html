@@ -7,10 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <title th:text="${title}">title</title>
-
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/dashboard/">
 
     <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
+
 
     <style>
         .bd-placeholder-img {
@@ -122,14 +123,55 @@
         .form_toggle .item-2 input[type=radio]:checked + label {
             background: #bbffbb;
         }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 0.5rem;
+        }
+        .material-icons-two-tone {
+            background-color: var(--bs-body-color);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            vertical-align: text-bottom;
+        }
     </style>
 
+    <link rel="stylesheet" href="/assets/fonts/tabler-icons.min.css">
+    <link rel="stylesheet" href="/assets/fonts/feather.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome.css">
+    <link rel="stylesheet" href="/assets/fonts/material.css">
+    <link rel="stylesheet" href="/assets/css/style.css" id="main-style-link">
 
     <!-- Custom styles for this template -->
     <link href="/dashboard.css" rel="stylesheet">
 
+
+<!--    <script src = "https://code.highcharts.com/highcharts.js" ></script>-->
+<!--    <script src="https://code.jquery.com/jquery-3.7.0.min.js"-->
+<!--            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>-->
+
+<!--    <script src="https://code.highcharts.com/highcharts.js"></script>-->
+<!--    <script src="https://code.highcharts.com/modules/exporting.js"></script>-->
+<!--    <script src="https://code.highcharts.com/modules/export-data.js"></script>-->
+<!--    <script src="https://code.highcharts.com/modules/accessibility.js"></script>-->
+
+<!--    <link href="/css/dashboards.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="/code/css/highcharts.css">
+
+    <script src="https://code.highcharts.com/dashboards/dashboards.js"></script>
+    <script src="https://code.highcharts.com/dashboards/modules/dashboards-plugin.js"></script>
+    <script src="/code/highcharts.js"></script>
+    <script src="/code/highcharts-3d.js"></script>
+    <script src="/code/modules/exporting.js"></script>
+    <script src="/code/modules/export-data.js"></script>
+    <script src="/code/modules/accessibility.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+
 </head>
 <body>
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="check2" viewBox="0 0 16 16">
         <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
@@ -198,7 +240,6 @@
     </ul>
 </div>
 
-
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">MADigital</a>
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
@@ -206,8 +247,8 @@
             aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-<!--    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search"-->
-<!--           aria-label="Search">-->
+    <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder=""
+           aria-label="Search">
     <div class="navbar-nav">
         <div class="nav-item text-nowrap">
             <a class="nav-link px-3" href="javascript: document.logoutForm.submit()">Выйти</a>
@@ -226,7 +267,7 @@
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="/dash/dashboardV1">
                             <span data-feather="home" class="align-text-bottom"></span>
-                            Dashboard
+                            <b> Dashboard </b>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -239,6 +280,21 @@
                         </div>
                     </li>
                     <hr>
+                    <li class="nav-item">
+                        <a class="nav-link"  aria-current="page" href="/dash/groupdashboardV1">
+                            <span data-feather="home" class="align-text-bottom"></span>
+                            <b>Dashboard group</b>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <div th:each="grouppar : ${groupParams}">
+                            <a class="nav-link" th:href="'/dash/groupdashboard/'+${grouppar.id}" th:text="${grouppar.groupName}">
+                                <span data-feather="file" class="align-text-bottom"></span>
+                                Группа параметров
+                            </a>
+                        </div>
+                    </li>
+                    <hr>
                     <li class="nav-item" th:hidden="${!isAdmin}">
                         <a class="nav-link" href="/dash/dashboardparamList">
                             <span data-feather="bar-chart-2" class="align-text-bottom"></span>
@@ -246,7 +302,7 @@
                         </a>
                     </li>
                     <li class="nav-item" th:hidden="${!isAdmin}">
-                        <a class="nav-link" href="/dash/ftpsettingList">
+                        <a class="nav-link" href="/ftp/ftpsettingList">
                             <span data-feather="layers" class="align-text-bottom"></span>
                             Настройки FTP
                         </a>
@@ -296,12 +352,20 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                         <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/1/'+${dashboardParamId}">Линия</a>
                         </li>
-                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/2/'+${dashboardParamId}">Гистограмм</a>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/2/'+${dashboardParamId}">Гистограмма</a>
                         </li>
-                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/3/'+${dashboardParamId}">Область</a>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/3/'+${dashboardParamId}">Гистограмма 3D</a>
                         </li>
-                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/4/'+${dashboardParamId}">Область
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/4/'+${dashboardParamId}">Область</a>
+                        </li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/5/'+${dashboardParamId}">Область
                             с регрессом</a></li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/6/'+${dashboardParamId}">Текст</a>
+                        </li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/7/'+${dashboardParamId}">Круг</a>
+                        </li>
+                        <li><a class="dropdown-item" type="button" th:href="'/dash/typeLine/8/'+${dashboardParamId}">Кольцо 3D</a>
+                        </li>
                     </ul>
                     <button type="button" class="btn btn-sm btn-outline-primary dropdown-toggle"
                             id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
@@ -330,185 +394,19 @@
 
             <!--   __________________________________________________________________________________________________-->
 
-            <div>
-                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+
+
+
+            <div class ="grid">
+                 <div class="my-4 w-100" id="container" width="900" height="380"></div>
             </div>
 
-            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+            <script src="/js/dashboardscript.js"></script>
             <script th:inline="javascript">
-                let colors = ['#F0F4C3', '#BDBDBD', '#8BC34A', '#CDDC39', '#AFB42B', '#B3E5FC', '#F5F5F5', '#DCEDC8', '#03A9F4', '#FFF9C4'];
-                let colorsBorder = ['#303F9F', '#00796B', '#3F51B5', '#5D4037', '#607D8B', '#757575', '#536DFE', '#336600', '#795548', '#388E3C'];
-                let color = colors[Math.ceil(Math.random() * 10)];
-                let colorBorder = colorsBorder[Math.ceil(Math.random() * 10)];
-                // Получение контекста для рисования
-                let canvas = window.document.querySelector('canvas');
-                let context = canvas.getContext('2d');
-                // Функции
-                if ([[${typeline_select}]] === 'Область') {
-                    const createAreaChart = (xData, yData) => {
-                        let data = {
-                            labels: xData,
-                            datasets: [{
-                                label: /*[[${dashboardParam}]]*/ 'Показатель',
-                                data: yData,
-                                pointStyle: 'star',
-                                pointRadius: 4,
-                                fill: {
-                                    target: 'origin',
-                                    above: color
-                                },
-                                borderWidth: 1,
-                                borderColor: colorBorder
-                            }]
-                        }
-                        let config = {
-                            type: 'line',
-                            data: data
-                        }
-                        let chart = new Chart(context, config);
-                    }
-                    // Получение данных с сервера
-                    axios.get('/api/dashboard/V2/' + [[${dashboardParamId}]] + '/' + [[${periodValue}]])
-                        .then((response) => {
-                            let data = response.data;
-                            let xData = [];
-                            let yData = [];
-                            for (let i = 0; i < data.length; i++) {
-                                xData.push(data[i].date);
-                                yData.push(data[i].value);
-                            }
-                            createAreaChart(xData, yData);
-                        });
 
-                } else if ([[${typeline_select}]] === 'Гистограмма') {
-                    // _____________________________________________________________________________________________
-                    const createBarChart = (xData, yData) => {
-                        let data = {
-                            labels: xData,
-                            datasets: [{
-                                label: /*[[${dashboardParam}]]*/ 'Показатель',
-                                data: yData,
-                                backgroundColor: color,
-                                borderColor: colorBorder,
-                                borderWidth: 2
-                            }]
-                        }
-                        let config = {
-                            type: 'bar',
-                            data: data
-                        }
-                        let chart = new Chart(context, config);
-                    }
-                    // Получение данных с сервера
-                    axios.get('/api/dashboard/V2/' + [[${dashboardParamId}]] + '/' + [[${periodValue}]])
-                        .then((response) => {
-                            let data = response.data;
-                            let xData = [];
-                            let yData = [];
-                            for (let i = 0; i < data.length; i++) {
-                                xData.push(data[i].date);
-                                yData.push(data[i].value);
-                            }
-                            createBarChart(xData, yData);
-                        });
-                } else if ([[${typeline_select}]] === 'Линия') {
-                    const createLineChart = (xData, yData) => {
-                        let data = {
-                            labels: xData,
-                            datasets: [{
-                                label: /*[[${dashboardParam}]]*/ 'Показатель',
-                                data: yData,
-                                pointStyle: 'crossRot',
-                                pointRadius: 4,
-                                fill: false,
-                                borderColor: colorBorder,
-                                borderWidth: 2
-                            }]
-                        }
-                        let config = {
-                            type: 'line',
-                            data: data
-                        }
-                        let chart = new Chart(context, config);
-                    }
-                    // Получение данных с сервера
-                    axios.get('/api/dashboard/V2/' + [[${dashboardParamId}]] + '/' + [[${periodValue}]])
-                        .then((response) => {
-                            let data = response.data;
-                            let xData = [];
-                            let yData = [];
-                            for (let i = 0; i < data.length; i++) {
-                                xData.push(data[i].date);
-                                yData.push(data[i].value);
-                            }
-                            createLineChart(xData, yData);
-                        });
-                } else {
-                    const createAreaLineChart = (xData, yData, yData1) => {
-                        let data = {
-                            labels: xData,
-                            datasets: [{
-                                type: 'line',
-                                label: /*[[${dashboardParam}]]*/ 'Показатель',
-                                data: yData,
-                                pointStyle: 'star',
-                                pointRadius: 4,
-                                fill: {
-                                    target: 'origin',
-                                    above: color
-                                },
-                                borderWidth: 1,
-                                borderColor: colorBorder,
-                                order: 2
-                            }, {
-                                type: 'line',
-                                label: 'Регрессия',
-                                data: yData1,
-                                pointStyle: false,
-                                fill: false,
-                                borderWidth: 2,
-                                order: 1,
-                                borderColor: '#E64A19'
-                            }]
-                        }
-                        let config = {
-                            data: data
-                        }
-                        let chart = new Chart(context, config);
-                    }
-                    // Получение данных с сервера
-                    axios.get('/api/dashboard/V2/' + [[${dashboardParamId}]] + '/' + [[${periodValue}]])
-                        .then((response) => {
-                            let data = response.data;
-                            let xData = [];
-                            let yData = [];
-                            let yData1 = [];
-                            let sumxx = 0;
-                            let sumx = 0;
-                            let sumxy = 0;
-                            let sumy = 0;
-                            for (let i = 0; i < data.length; i++) {
-                                xData.push(data[i].date);
-                                yData.push(data[i].value);
-                                sumx = sumx + i;
-                                sumxx = sumxx + i * i;
-                                sumy = sumy + Number(data[i].value);
-                                sumxy = sumxy + Number(data[i].value) * i;
-                            }
-                            // Вычисляем формулу прямой регресса y=a+b*x________________
-                            let a = (sumy * sumxx - sumx * sumxy) / (data.length * sumxx - sumx * sumx);
-                            let b = (data.length * sumxy - sumx * sumy) / (data.length * sumxx - sumx * sumx);
-                            //__________________________________________________________
-                            for (let i = 0; i < data.length; i++) {
-                                yData1.push(a + b * i);
-                            }
+               myFunction([[${dashboardParamId}]],[[${periodValue}]],[[${typeline_select}]],[[${dashboardParam}]]);
 
-                            createAreaLineChart(xData, yData, yData1);
-
-                        });
-                }
             </script>
 
             <h2>Таблица показателей</h2>
@@ -538,15 +436,7 @@
     </div>
 </div>
 
-
 <script src="/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"
-        integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"
-        integrity="sha384-gdQErvCNWvHQZj6XZM0dNsAoY4v+j5P1XDpNkcM3HJG1Yx04ecqIHk7+4VBOCHOG"
-        crossorigin="anonymous"></script>
-<script src="dashboard.js"></script>
 </body>
 </html>

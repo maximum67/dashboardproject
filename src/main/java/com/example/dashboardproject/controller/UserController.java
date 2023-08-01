@@ -3,6 +3,7 @@ package com.example.dashboardproject.controller;
 import com.example.dashboardproject.models.Role;
 import com.example.dashboardproject.models.User;
 import com.example.dashboardproject.services.DashboardParamService;
+import com.example.dashboardproject.services.GroupParamService;
 import com.example.dashboardproject.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final DashboardParamService dashboardParamService;
+    private final GroupParamService groupParamService;
 
     @PostMapping("/updatePassword/{id}")
     public String updatePassword(@RequestParam("userId") User user, @RequestParam("password") String password) {
@@ -31,6 +33,7 @@ public class UserController {
         model.addAttribute("title", "Пользователи");
         model.addAttribute("users", userService.list());
         model.addAttribute("params", dashboardParamService.list());
+        model.addAttribute("groupParams", groupParamService.list());
         return "userList";
     }
 
@@ -40,6 +43,7 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
         model.addAttribute("params", dashboardParamService.list());
+        model.addAttribute("groupParams", groupParamService.list());
         return "userEdit";
     }
 

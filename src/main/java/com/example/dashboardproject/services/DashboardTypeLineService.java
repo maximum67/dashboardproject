@@ -38,6 +38,10 @@ public class DashboardTypeLineService {
                 if (Objects.equals(lineSetting.getUser().getId(), user.getId())) {
                     return switch (lineSetting.getTypeLine()) {
                         case BAR -> "Гистограмма";
+                        case BAR3D -> "Гистограмма 3D";
+                        case TEXT -> "Текст";
+                        case PIE -> "Круг";
+                        case DONUT3D-> "Кольцо 3D";
                         case LINE_AREA -> "Область";
                         case LINE_REGRESS -> "Область с регрессом";
                         default -> "Линия";

@@ -33,11 +33,23 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, mappedBy = "user")
+    private List<PeriodSettingGroup> periodSettingGroups = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, mappedBy = "user")
     private List<LineSetting> lineSettings = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY, mappedBy = "user")
+    private List<LineSettingGroup> lineSettingGroups = new ArrayList<>();
 
     @OneToMany(cascade=CascadeType.ALL,
              fetch = FetchType.LAZY,mappedBy = "user")
     private List<HiddenSetting> hiddenSetting = new ArrayList<>();
+
+    @OneToMany(cascade=CascadeType.ALL,
+            fetch = FetchType.LAZY,mappedBy = "user")
+    private List<HiddenSettingGroup> hiddenSettingGroup = new ArrayList<>();
 
     public boolean isAdmin() {
         return roles.contains(Role.ROLE_ADMIN);
