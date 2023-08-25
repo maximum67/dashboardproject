@@ -575,7 +575,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[0],
                                 // fillColor: colors[0],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -591,7 +591,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[1],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -607,7 +607,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[2],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -623,7 +623,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[3],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -639,7 +639,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[4],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -655,7 +655,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[5],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -671,7 +671,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[6],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -687,7 +687,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[7],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -703,7 +703,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[8],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -719,7 +719,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[9],
                                 // fillColor: colors[2],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -805,7 +805,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[0],
                                 // fillColor: colors[0],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -821,7 +821,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[1],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -837,7 +837,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[2],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -853,7 +853,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[3],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -869,7 +869,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[4],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -885,7 +885,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[5],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -901,7 +901,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[6],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -917,7 +917,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[7],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -933,7 +933,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[8],
                                 // fillColor: colors[1],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },
@@ -949,7 +949,7 @@ function myFunction2(groupParamId, periodValue, typeline_select, groupParamName)
                                 showInLegend: showInLegend[9],
                                 // fillColor: colors[2],
                                 fillOpacity: 0.5,
-                                softThreshold: false,
+                                softThreshold: true,
                                 marker: {
                                     radius: 3
                                 },

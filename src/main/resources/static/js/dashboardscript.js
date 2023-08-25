@@ -184,7 +184,7 @@ function myFunction(dashboardParamId, periodValue, typeline_select, dashboardPar
                     series: [{
                         name: dashboardParam,
                         data: yData,
-                        softThreshold: false,  // построение графиков не от нуля по y
+                        softThreshold: true,  // построение графиков не от нуля по y
                         dataLabels: {
                             enabled: true,
                             // rotation: -90,       // поворт подписи вертикально
@@ -387,7 +387,8 @@ function myFunction(dashboardParamId, periodValue, typeline_select, dashboardPar
                         labels: {
                             skew3d: true,
                             style: {
-                                fontSize: ''
+                                fontSize: '',
+                                color: ''
                             }
                         }
                     },
@@ -419,7 +420,7 @@ function myFunction(dashboardParamId, periodValue, typeline_select, dashboardPar
                     series: [{
                         name: dashboardParam,
                         data: yData,
-                        softThreshold: false,  // построение графиков не от нуля по y
+                        softThreshold: true,  // построение графиков не от нуля по y
                         dataLabels: {
                             enabled: true,
                             // rotation: -90,       // поворт подписи вертикально
